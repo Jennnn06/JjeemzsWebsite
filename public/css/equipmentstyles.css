@@ -1,0 +1,93 @@
+/* CSS */
+.form-control::placeholder {
+    color: #969696; /* Placeholder text color */
+}
+
+.boxes{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70vw;
+    margin-left: 20px;
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 250px;
+    background-image: url('../assets/folderimage.png');
+    background-size: 100% 100%;
+    color: #f0f0f0;
+    margin: 20px;
+    padding-top: 50px;
+    margin-left: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+}
+
+.clearfix {
+    flex-basis: 100%;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clear: both;
+}
+
+.column1{
+    display: flex;
+    flex-direction: row;
+}
+
+.id{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+}
+
+.edit{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    justify-content: center;
+    background-color: #228b22;
+    color: #f0f0f0;
+    border-radius: 5px;
+    width: 30px;
+    margin-left: 73px;
+    align-items: center;
+}
+
+.view{
+    display: flex;
+    font-size: 12px;
+    justify-content: center;
+    background-color: #0077b6;
+    color: #f0f0f0;
+    border-radius: 5px;
+    align-items: center;
+    margin-left: 8px;
+    width: 30px;
+}
+
+.column2{
+    display: flex;
+    font-size: 12px;
+    margin-top: 110px;
+    margin-left: 20px;
+}
+
+.column3{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin-top: 5px;
+}
