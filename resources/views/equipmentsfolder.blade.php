@@ -60,13 +60,23 @@
                         <p style="margin-top: 30px; margin-left: 15px">ID CODE: {{$equipment->id}}</p>
                     </div>
                     <div class="edit">
-                        <i class="fa-solid fa-pencil"></i>
+                        <!-- Creates 'id' variable the comes from $equipment->id(got declared from controller) -->
+                        <a href="{{ route('equipments.editfolder', ['id' => $equipment->id]) }}" style="text-decoration: none; color: white;">
+                            <i class="fa-solid fa-pencil">
+                            </i>
+                        </a>
                     </div>
                     <div class="view">
                         <i class="fa-solid fa-eye"></i>
                     </div>
                 </div>
-
+                <div class="column4">
+                    @if ($equipment->equipmentsimage)
+                        <img src="{{$equipment->equipmentsimage}}" alt="Equipment Image" style="width: 90px; height: 90px;">
+                    @else
+                        <p>No image available</p>
+                    @endif
+                </div>
                 <!-- Date Maintenance -->
                 <div class="column2">
                     <p>Last Maintenance: {{$equipment->updated_at}}</p>
@@ -77,9 +87,9 @@
                     <p>{{$equipment->equipmentsname}}</p>
                 </div>
             </div>
-            @if (($index + 1) % 3 == 0)
-            <div class="clearfix"></div>
-            @endif
+                @if (($index + 1) % 3 == 0)
+                <div class="clearfix"></div>
+                @endif
             @endforeach
         </div>
         

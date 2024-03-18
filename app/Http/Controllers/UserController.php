@@ -73,6 +73,13 @@ class UserController extends Controller
             'password' => ['required', 'min:4', 'max:100']
         ]);
 
+        //Example of assigning the input field names to database column names
+        /*$userData = [
+            'usersname' => $data['name'], // Assuming 'usersname' is the column name in the database
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']) // Assuming you're hashing the password
+        ];*/
+
         User::create($data);
 
         return redirect(route('manageusers'));

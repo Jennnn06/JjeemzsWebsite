@@ -9,7 +9,7 @@
 
 <!-- Equipments -->
 <div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828;">
-    <div style="background-color: #323232; border-radius: 5px; padding: 40px; height:100vh">
+    <div style="background-color: #323232; border-radius: 5px; padding: 40px;">
         
         <!-- Text and Create-->
         <div style="align-items: flex-start; display:flex; flex-direction:row; justify-content: space-between;">
@@ -44,6 +44,39 @@
                     <th style="border-top-right-radius: 5px;">Delete</th>
                 </thead>
                 <tbody class="table-group-divider">
+                    @foreach($equipments as $equipment)
+                        <tr>
+                            <td>{{$equipment ->id}}</td>
+                            <td>{{$equipment ->ITEM_IMAGE}}</td>
+                            <td>{{$equipment ->ITEM_NAME}}</td>
+                            <td>{{$equipment ->BRAND}}</td>
+                            <td>{{$equipment ->COLOR}}</td>
+                            <td>{{$equipment ->QUANTITY}}</td>
+                            <td>{{$equipment ->STATUS}}</td>
+                            <td>{{$equipment ->AVAILABLE}}</td>
+                            <td>{{$equipment ->IN_OUT}}</td>
+                            <td>{{$equipment ->REASON}}</td>
+                            <td>{{$equipment ->NOTE}}</td>
+                            <td>{{$equipment ->FOLDER}}</td>
+
+                            <!-- Edit User -->
+                            <td>
+                                <!-- view -> web.php/route -> controller -->
+                                <a href="#" style="text-decoration: none">
+                                    @csrf
+                                    <i class="fa-solid fa-pencil" style="width: 30px; height: 30px; border-radius: 5px; background-color: green; color:#f0f0f0; display: flex; flex: 1; align-items:center; justify-content: center">
+                                    </i>
+                                </a>
+                            </td>
+
+                            <!-- Delete -->
+                            <td>
+                                <a href="#" style="text-decoration: none">
+                                    <i class="fa-solid fa-xmark" style="width: 30px; height: 30px; border-radius: 5px; background-color: red; color:#f0f0f0; display: flex; flex: 1; align-items:center; justify-content: center"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

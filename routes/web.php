@@ -8,6 +8,7 @@ use App\Http\Controllers\EquipmentsController;
 use App\Http\Controllers\EquipmentsfolderController;
 use App\Http\Controllers\UserController;
 use App\Models\Equipments;
+use App\Models\EquipmentsFolder;
 
 // Redirect root URL to login page
 Route::redirect('/', '/login');
@@ -41,16 +42,21 @@ Route::group(['middleware' => 'auth'], function(){
     Route::put('/users/{id}/editusers', [UserController::class, 'updatefunction']);
     Route::delete('/users/{user}/delete', [UserController::class, 'delete'])->name('user.delete');
 
+    //Manage folder for equipments
+    Route::get('/equipments', [EquipmentsfolderController::class, 'index'])->name('equipments');
+
     //Create folder for equipments
     Route::get('/createfolder', [EquipmentsfolderController::class, 'create'])->name('createfolder');
     Route::post('/createfolder', [EquipmentsfolderController::class, 'createPOST'])->name('createfolder.post');
 
-    //Equipment route
-    Route::get('/equipments', [EquipmentsfolderController::class, 'index'])->name('equipments');
+    //Edit folder for equipments. The {id} variable comes from equipmentsfolder.blade
+    Route::get('/equipments/{id}/editfolder', [EquipmentsFolderController::class, 'edit'])->name('equipments.editfolder');
+    Route::put('/equipments/{id}', [EquipmentsFolderController::class, 'update'])->name('equipments.updatefolder');
 
     //Add Equipment
     Route::get('/addequipments', [EquipmentsController::class, 'index'])->name('addequipments');
     Route::get('/addequipments/add', [EquipmentsController::class, 'add']);
+    Route::post('/addequipments/add', [EquipmentsController::class, 'store'])->name('addequipments.store');
 
     /* Mas easy, Dynamic content loading route
     Route::get('/{section}', 'YourController@loadSection')->name('loadSection');*/
