@@ -50,11 +50,11 @@
             </a>
         </div>
 
-        <!-- Search bar -->
-        <form action="{{ route('manageusers') }}" method="GET">
-            <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px" placeholder="Type to search...">
-        </form>
-        
+        <!-- Search bar 
+        <form action="#" method="GET">
+        </form> -->
+
+        <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px" placeholder="Type to search...">
 
         <!-- Table -->
         <div id="usersTable">

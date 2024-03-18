@@ -5,13 +5,11 @@
         <p style="margin: 5px 0 0 5px; font-size:30px">
             @if(request()->routeIs('dashboard'))
                 Dashboard
-            @elseif(request()->routeIs('equipments'))
+            @elseif(request()->routeIs('equipments') || request()->is('createfolder'))
                 Equipments
-            @elseif(request()->routeIs('addequipments'))
+            @elseif(request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit'))
                 Add Equipments
-            @elseif(request()->routeIs('manageusers'))
-                Manage Users
-            @elseif(request()->routeIs('editusers'))
+            @elseif(request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers'))
                 Manage Users
             @else
                 Dashboard

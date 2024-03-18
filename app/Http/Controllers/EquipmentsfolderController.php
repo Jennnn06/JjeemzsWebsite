@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipments;
+use Illuminate\Http\Request;
 use App\Models\EquipmentsFolder;
 use Illuminate\Support\Facades\File; 
-use Illuminate\Http\Request;
 
 class EquipmentsfolderController extends Controller
 {
@@ -65,6 +66,9 @@ class EquipmentsfolderController extends Controller
             'equipmentsname'=> ['required']
         ]);
 
+        // Get the old folder name
+        $oldFolderName = $folder->equipmentsname;
+
         // Update the name field
         $folder->equipmentsname = $request->input('equipmentsname');
     
@@ -89,11 +93,13 @@ class EquipmentsfolderController extends Controller
         }
     
         $folder->save();
+
+        // Update corresponding equipments records
+        Equipments::where('FOLDER', $oldFolderName)
+        ->update(['FOLDER' => $folder->equipmentsname]);
     
         // Redirect back to the "Manage folder for equipments" page
         return redirect()->route('equipments')->with('success', 'Folder image updated successfully.');
     }
-    
-
 
 }

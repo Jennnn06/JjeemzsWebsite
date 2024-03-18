@@ -53,10 +53,15 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/equipments/{id}/editfolder', [EquipmentsFolderController::class, 'edit'])->name('equipments.editfolder');
     Route::put('/equipments/{id}', [EquipmentsFolderController::class, 'update'])->name('equipments.updatefolder');
 
-    //Add Equipment
+    //Manage Equipment
     Route::get('/addequipments', [EquipmentsController::class, 'index'])->name('addequipments');
+    
+    //Add Equipment
     Route::get('/addequipments/add', [EquipmentsController::class, 'add']);
     Route::post('/addequipments/add', [EquipmentsController::class, 'store'])->name('addequipments.store');
+
+    //Edit Equipment
+    Route::get('/editequipments/{id}', [EquipmentsController::class, 'edit'])->name('editequipments.edit');
 
     /* Mas easy, Dynamic content loading route
     Route::get('/{section}', 'YourController@loadSection')->name('loadSection');*/

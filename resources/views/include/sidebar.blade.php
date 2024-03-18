@@ -43,19 +43,19 @@
         </a>
     </li>
     <li>
-        <a href="{{route('equipments')}}" class="nav-link{{ request()->routeIs('equipments') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('equipments') ? 'background-color: #779933' : '' }}">
+        <a href="{{route('equipments')}}" class="nav-link{{ request()->routeIs('equipments') || request()->is('createfolder') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('equipments') || request()->is('createfolder') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-toolbox" style="margin-right: 5px;"></i>
         Equipments
         </a>
     </li>
     <li>
-        <a href="{{route('addequipments')}}" class="nav-link{{ request()->routeIs('addequipments') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('addequipments') ? 'background-color: #779933' : '' }}">
+        <a href="{{route('addequipments')}}" class="nav-link{{ request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-plus" style="margin-right: 5px;"></i>
         Add Equipments
         </a>
     </li>
     <li>
-        <a href="{{route('manageusers')}}" class="nav-link{{ request()->routeIs('manageusers') || request()->routeIs('editusers') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('manageusers') || request()->routeIs('editusers') ? 'background-color: #779933' : '' }}">
+        <a href="{{route('manageusers')}}" class="nav-link{{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-users" style="margin-right: 5px;"></i>
         Manage Users
         </a>
