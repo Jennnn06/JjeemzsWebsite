@@ -17,9 +17,9 @@
         </div>
         
         <div style="margin-left: 20px; margin-top: 20px">
-        <form method="post" action="#" enctype="multipart/form-data">
+        <form method="post" action="{{route('editequipments.update', ['id' => $editequipment->id])}}" enctype="multipart/form-data">
             @csrf
-
+            @method('PUT')
             <!-- Upload Image -->
             <div class="mb-3 row">
                 <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0">Upload Image:</label>

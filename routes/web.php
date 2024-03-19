@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentsController;
 use App\Http\Controllers\EquipmentsfolderController;
@@ -26,9 +27,7 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 //Access dashboard through authentication
 Route::group(['middleware' => 'auth'], function(){
-    Route::get('/dashboard', function(){
-        return view('/dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Create user
     Route::get('/createuser', [UserController::class, 'createfunction'])->name('createusers');
@@ -53,15 +52,21 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/equipments/{id}/editfolder', [EquipmentsFolderController::class, 'edit'])->name('equipments.editfolder');
     Route::put('/equipments/{id}', [EquipmentsFolderController::class, 'update'])->name('equipments.updatefolder');
 
+    //View equipments by folder
+    Route::get('/equipments/{id}/view', [EquipmentsFolderController::class, 'view'])->name('equipments.viewfolder');
+
     //Manage Equipment
     Route::get('/addequipments', [EquipmentsController::class, 'index'])->name('addequipments');
     
     //Add Equipment
     Route::get('/addequipments/add', [EquipmentsController::class, 'add']);
     Route::post('/addequipments/add', [EquipmentsController::class, 'store'])->name('addequipments.store');
+    Route::delete('/addequipments/{equipment}/delete', [EquipmentsController::class, 'delete'])->name('addequipments.delete');
 
-    //Edit Equipment
+    //Edit update and delete Equipment
     Route::get('/editequipments/{id}', [EquipmentsController::class, 'edit'])->name('editequipments.edit');
+    Route::put('/editequipments/{id}', [EquipmentsController::class, 'update'])->name('editequipments.update');
+    
 
     /* Mas easy, Dynamic content loading route
     Route::get('/{section}', 'YourController@loadSection')->name('loadSection');*/

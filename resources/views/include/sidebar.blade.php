@@ -31,8 +31,8 @@
 
 <!-- Sidebar -->
 <div class="d-flex flex-column position-fixed" style="height:100vh; width: 210px; background-color: #323232;">
-    <div class="logo" style="background-color: #779933; width: 100%">
-        <img src="{{asset('img/logosample.png')}}" style="width: 100px; height: 75px; display: block; margin: 0 auto;">
+    <div class="logo" style="display:flex; justify-content: center; height:auto; width:auto; margin-top: 20px">
+        <i class="fa-solid fa-building" style="color:#779933; font-size: 50px; text-align: center;"></i>
     </div>
     
     <ul class="nav nav-pills flex-column mb-auto p-3">

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
 use Illuminate\Http\Request;
-use App\Models\EquipmentsFolder;
 use Illuminate\Support\Facades\File; 
 
 class EquipmentsfolderController extends Controller
@@ -100,6 +100,16 @@ class EquipmentsfolderController extends Controller
     
         // Redirect back to the "Manage folder for equipments" page
         return redirect()->route('equipments')->with('success', 'Folder image updated successfully.');
+    }
+
+    public function view($id){
+        // Find the folder based on the provided ID
+        $folder = EquipmentsFolder::findOrFail($id);
+
+        // Retrieve the equipments belonging to the selected folder
+        $equipmentsView = Equipments::where('FOLDER', $folder->equipmentsname)->get();
+
+        return view('viewbyfolder', ['equipmentsView' => $equipmentsView]);
     }
 
 }

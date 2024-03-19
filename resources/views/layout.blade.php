@@ -11,13 +11,13 @@
   </head>
   <body>
     <!-- Pass the content -->
-    <div style="background-color: #282828;">
+    <div style="background-color: #282828; min-height:100vh">
       <div class="mycontent" style="display: flex; flex:1; flex-direction: row; ">
         <!-- Sidebar -->
         @include('include/sidebar')
         
         <!-- Main Content -->
-        <div class="flex-grow-1" style="padding-left: 210px; background-color: #282828;">
+        <div class="flex-grow-1" style="padding-left: 210px; background-color: #282828; min-height: 100vh;">
           @include('include/header')
           @yield('content')
         </div>

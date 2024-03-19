@@ -39,8 +39,8 @@
 </script>
 
 <!-- Users -->
-<div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828;">
-    <div style="background-color: #323232; border-radius: 5px; padding: 40px; height:100vh">
+<div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828; min-height:100vh;">
+    <div style="background-color: #323232; border-radius: 5px; padding: 40px; min-height:100vh;">
         
         <!-- Text and Create-->
         <div style="align-items: flex-start; display:flex; flex-direction:row; justify-content: space-between;">

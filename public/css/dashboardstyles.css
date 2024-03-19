@@ -16,16 +16,16 @@ html, body {
     font-weight: bold;
     box-shadow: 1px;
     width: 200px;
-    height: 130px;
-    border-radius: 5px;
+    height: 110px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
     color: #f0f0f0;
-    background-color: #323232;
 }
 
 .bigbox{
     display: flex;
     flex-direction: row;
-    margin: 50px;
+    margin: 20px;
     justify-content: space-between;
 }
 
@@ -37,4 +37,38 @@ html, body {
     border-radius: 5px;
     color: #f0f0f0;
     background-color: #323232;
+}
+
+.maint{
+    display: flex;
+    flex-direction: column;
+    width: 750px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.calendar{
+    width: 300px;
+    background-color: lightsalmon;
+    justify-content: center;
+    align-items: center;
+}
+
+#calendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    font-size: 40px;
+    background-color: white;
+    color: #323232;
+}
+
+#month, #date, #year, #day {
+    margin: 0 10px;
+}
+
+#day, #year{
+    color: #ffffff;
 }

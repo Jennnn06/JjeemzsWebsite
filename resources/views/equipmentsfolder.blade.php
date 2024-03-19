@@ -54,11 +54,15 @@
         <div class="boxes">
             @foreach ($equipments as $index => $equipment)
             <div class="box">
-                <!-- ID, Edit, and View -->
+                <!-- ID, Edit and View-->
                 <div class="column1">
+
+                    <!-- ID -->
                     <div class="id">
                         <p style="margin-top: 30px; margin-left: 15px">ID CODE: {{$equipment->id}}</p>
                     </div>
+
+                    <!-- Edit -->
                     <div class="edit">
                         <!-- Creates 'id' variable the comes from $equipment->id(got declared from controller) -->
                         <a href="{{ route('equipments.editfolder', ['id' => $equipment->id]) }}" style="text-decoration: none; color: white;">
@@ -66,13 +70,18 @@
                             </i>
                         </a>
                     </div>
+
+                    <!-- View -->
                     <div class="view">
-                        <i class="fa-solid fa-eye"></i>
+                        <a href="{{ route('equipments.viewfolder', ['id' => $equipment->id]) }}">
+                            <i class="fa-solid fa-eye" style="color: white"></i>
+                        </a>                        
                     </div>
+                    
                 </div>
                 <div class="column4">
                     @if ($equipment->equipmentsimage)
-                        <img src="{{$equipment->equipmentsimage}}" alt="Equipment Image" style="width: 90px; height: 90px;">
+                        <img src="{{$equipment->equipmentsimage}}" alt="Equipment Image" style="width: 90px; height: 90px;" loading="lazy">
                     @else
                         <p>No image available</p>
                     @endif

@@ -1,8 +1,7 @@
 <!-- Partial Table -->
 <table class="table table-striped table-hover" >
     <thead>
-        <th style="border-top-left-radius: 5px;">ID</th>
-        <th>IMAGE</th>
+        <th style="border-top-left-radius: 5px;">IMAGE</th>
         <th>ITEM NAME</th>
         <th>BRAND</th>
         <th>COLOR</th>
@@ -19,7 +18,6 @@
     <tbody class="table-group-divider">
         @foreach($equipments as $equipment)
             <tr>
-                <td>{{$equipment ->id}}</td>
                 <td>
                     @if ($equipment->ITEM_IMAGE)
                     <img src="{{$equipment->ITEM_IMAGE}}" alt="Equipment Image" style="width: 50px; height: 50px;">

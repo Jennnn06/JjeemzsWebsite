@@ -2,7 +2,7 @@
 @extends('layout')
 
 <!-- Pass the title to layout -->
-@section('title', 'Add Equipments')
+@section('title', 'View')
 
 <!-- Pass the content to layout -->
 @section('content')
@@ -28,8 +28,8 @@
 </script> 
 
 <!-- Equipments -->
-<div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828; min-height: 100vh;">
-    <div style="background-color: #323232; border-radius: 5px; padding: 40px;">
+<div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828; min-height:100vh;">
+    <div style="background-color: #323232; border-radius: 5px; padding: 40px; min-height:100vh;">
         
         <!-- Text and Create-->
         <div style="align-items: flex-start; display:flex; flex-direction:row; justify-content: space-between;">
@@ -64,14 +64,14 @@
                     <th style="border-top-right-radius: 5px;">Delete</th>
                 </thead>
                 <tbody class="table-group-divider">
-                    @foreach($equipments as $equipment)
+                    @foreach($equipmentsView as $equipment)
                         <tr>
                             <!--Image -->
                             <td>
                                 @if ($equipment->ITEM_IMAGE)
-                                <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
+                                    <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;">
                                 @else
-                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
+                                    <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;">
                                 @endif
                             </td>
                             <td>{{$equipment ->ITEM_NAME}}</td>

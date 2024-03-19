@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
 use Illuminate\Http\Request;
-use App\Models\EquipmentsFolder;
+use Illuminate\Support\Facades\File;
 
 class EquipmentsController extends Controller
 {
@@ -47,7 +48,7 @@ class EquipmentsController extends Controller
         $data = $request->validate([
             'equipmentsname' => ['required'],
             'equipmentsbrand' => ['nullable'],
-            'equipmentscolor' => ['required'],
+            'equipmentscolor' => ['nullable'],
             'equipmentsqty' => ['required', 'numeric', 'min:1'],
             'equipmentsstatus' => ['required'],
             'equipmentsavailable' => ['required'],
@@ -104,8 +105,67 @@ class EquipmentsController extends Controller
         return view('editequipments', compact('editequipment', 'equipmentsfolder'));
     }
 
-    public function update(){
+    public function update(Request $request, $id){
+        $data = $request->validate([
+            'equipmentsname' => ['required'],
+            'equipmentsbrand' => ['nullable'],
+            'equipmentscolor' => ['nullable'],
+            'equipmentsqty' => ['required', 'numeric', 'min:1'],
+            'equipmentsstatus' => ['required'],
+            'equipmentsavailable' => ['required'],
+            'equipmentsinout' => ['required'],
+            'equipmentsreason' => ['nullable'],
+            'equipmentsnote' => ['nullable'],
+            'equipmentsfolder' => ['nullable']
+        ]);
+    
+        $equipment = Equipments::findOrFail($id);
+    
+        // Update fields
+        $equipment->ITEM_NAME = $data['equipmentsname'];
+        $equipment->BRAND = $data['equipmentsbrand'];
+        $equipment->COLOR = $data['equipmentscolor'];
+        $equipment->QUANTITY = $data['equipmentsqty'];
+        $equipment->STATUS = $data['equipmentsstatus'];
+        $equipment->AVAILABLE = $data['equipmentsavailable'];
+        $equipment->IN_OUT = $data['equipmentsinout'];
+        $equipment->REASON = $data['equipmentsreason'];
+        $equipment->NOTE = $data['equipmentsnote'];
+        $equipment->FOLDER = $data['equipmentsfolder'];
+    
+        // If an image is uploaded
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            $destinationPath = public_path('assets/equipments_images');
+    
+            // Move the uploaded file to the destination directory
+            $fileName = $file->getClientOriginalName();
+            if ($file->move($destinationPath, $fileName)) {
+                // If file upload is successful, update the image path
+                $equipment->ITEM_IMAGE = 'assets/equipments_images/' . $fileName;
+    
+                // Delete the existing image if it exists
+                if (File::exists($destinationPath . '/' . $equipment->ITEM_IMAGE)) {
+                    unlink($destinationPath . '/' . $equipment->ITEM_IMAGE);
+                }
+    
+                echo "File Upload Success";
+            } else {
+                // If file upload fails, do nothing with the image path
+                echo "Failed to upload file";
+            }
+        }
+    
+        // Save the changes to the equipment
+        $equipment->save();
+    
+        return redirect(route('addequipments'));
+    }   
 
+    public function delete(Equipments $equipment){
+        $equipment->delete();
+
+        return redirect()->route('addequipments')->with('success', 'User deleted successfully.');
     }
 
 }
