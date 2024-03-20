@@ -15,18 +15,29 @@
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
-        $('#searchUserBar').on('input', function() {
-            var searchTerm = $(this).val(); // Get the search query from the input field
-            $.ajax({
-                url: '{{ route('equipments') }}', // Route to handle the search request on the server
-                method: 'GET',
-                data: { search: searchTerm }, // Pass the search query as data
-                success: function(response) {
-                    $('#boxes').html(response); // Update the users table with search results
-                }
-            });
+    // Trigger the AJAX request on page load
+    $.ajax({
+        url: '{{ route('equipments') }}',
+        method: 'GET',
+        success: function(response) {
+            $('#boxes').html(response);
+        }
+    });
+
+    // Listen for changes in the search input
+    $('#searchUserBar').on('input', function() {
+        var searchTerm = $(this).val();
+        $.ajax({
+            url: '{{ route('equipments') }}',
+            method: 'GET',
+            data: { search: searchTerm },
+            success: function(response) {
+                $('#boxes').html(response);
+            }
         });
     });
+});
+
 </script> 
 
 <!-- Equipments -->
@@ -46,7 +57,7 @@
             <!-- Search -->
             <div style="align-items: flex-start">
                 <label for="exampleDataList" class="form-label" style="color: #f0f0f0;">Select an equipment/tools</label>
-                <input class="form-control" list="datalistOptions" id="exampleDataList"  placeholder="Type to search...">
+                <input name="search" class="form-control" list="datalistOptions" id="searchUserBar"  placeholder="Type to search...">
             </div>
         </div>
 

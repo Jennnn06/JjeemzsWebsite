@@ -13,14 +13,25 @@
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
-        $('#searchUserBar').on('input', function() {
-            var searchTerm = $(this).val(); // Get the search query from the input field
+        $('#searchUserBar, #filbybrand, #filbycolor').on('input', function() {
+            var searchTerm = $('#searchUserBar').val();
+            var brandFilter = $('#filbybrand').val();
+            var colorFilter = $('#filbycolor').val();
+
             $.ajax({
                 url: '{{ route('addequipments') }}', // Route to handle the search request on the server
                 method: 'GET',
-                data: { search: searchTerm }, // Pass the search query as data
+                data: { 
+                    search: searchTerm,
+                    brand: brandFilter,
+                    color: colorFilter
+                },
                 success: function(response) {
+                    console.log('Response:', response);
                     $('#equipmentsTable').html(response); // Update the users table with search results
+                }
+                error: function(xhr, status, error) {
+                    console.error('Error:', error); // Log any errors to the console
                 }
             });
         });
@@ -55,14 +66,20 @@
                 <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by brand</label>
                 <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
                     <option selected>-- Filter by brand --</option>
+                    @foreach($brands as $brand)
+                        <option value="{{$brand}}">{{$brand}}</option>
+                    @endforeach
                 </select>
             </div>
 
             <!-- Filter by color -->
             <div style="align-items: flex-start">
-                <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by color</label>
-                <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
+                <label for="filbycolor" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by color</label>
+                <select class="form-select form-select-sm" aria-label="Small select example" id="filbycolor" style="width: 200px; margin-left: 50px; ">
                     <option selected>-- Filter by color --</option>
+                    @foreach($colors as $color)
+                        <option value="{{$color}}">{{$color}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -77,7 +94,7 @@
                     <th>COLOR</th>
                     <th>QTY</th>
                     <th>STATUS</th>
-                    <th>AVAILABLE</th>
+                    <th>AVAILABILITY</th>
                     <th>IN / OUT</th>
                     <th>REASON</th>
                     <th>NOTE</th>

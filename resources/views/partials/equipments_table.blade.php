@@ -7,7 +7,7 @@
         <th>COLOR</th>
         <th>QTY</th>
         <th>STATUS</th>
-        <th>AVAILABLE</th>
+        <th>AVAILABILITY</th>
         <th>IN / OUT</th>
         <th>REASON</th>
         <th>NOTE</th>
@@ -18,11 +18,12 @@
     <tbody class="table-group-divider">
         @foreach($equipments as $equipment)
             <tr>
+                <!--Image -->
                 <td>
                     @if ($equipment->ITEM_IMAGE)
-                    <img src="{{$equipment->ITEM_IMAGE}}" alt="Equipment Image" style="width: 50px; height: 50px;">
+                    <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
                     @else
-                    <img src="assets/placeholder.jpg" alt="Equipment Image" style="width: 50px; height: 50px;">
+                    <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
                     @endif
                 </td>
                 <td>{{$equipment ->ITEM_NAME}}</td>
@@ -48,10 +49,15 @@
 
                 <!-- Delete -->
                 <td>
-                    <a href="#" style="text-decoration: none">
-                        <i class="fa-solid fa-xmark" style="width: 30px; height: 30px; border-radius: 5px; background-color: red; color:#f0f0f0; display: flex; flex: 1; align-items:center; justify-content: center"></i>
-                    </a>
+                    <form id="deleteEquipmentForm_{{ $equipment->id }}" method="POST" action="{{ route('addequipments.delete', ['equipment' => $equipment->id]) }}" onsubmit="return confirm('Are you sure you want to delete this equipment?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background-color: transparent; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-xmark" style="width: 30px; height: 30px; border-radius: 5px; background-color: red; color:#f0f0f0; display: flex; flex: 1; align-items:center; justify-content: center"></i>
+                        </button>
+                    </form>
                 </td>
+
             </tr>
         @endforeach
     </tbody>

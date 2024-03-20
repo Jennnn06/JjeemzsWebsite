@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <p style="margin: 5px 0 0 5px; font-size:30px">
             @if(request()->routeIs('dashboard'))
-                <img src="assets/bg.png" style="width: 150px; height: 100px;"> Constructions Services
+                <img src="assets/bg.png" style="width: 150px; height: 100px;"> JJEEMZS Constructions Services
                 </img>
             @elseif(request()->routeIs('equipments') || request()->is('createfolder'))
                 Equipments

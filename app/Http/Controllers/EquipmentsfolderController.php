@@ -15,8 +15,7 @@ class EquipmentsfolderController extends Controller
 
         // Retrieve users based on the search term if provided
         if ($searchTerm) {
-            $equipments = Equipments::where('ITEM_NAME', 'like', '%' . $searchTerm . '%')
-                ->get();
+            $equipments = EquipmentsFolder::where('equipmentsname', 'like', '%' . $searchTerm . '%')->get();
         } else {
             // Otherwise, fetch all users
             $equipments = EquipmentsFolder::all();
@@ -25,10 +24,10 @@ class EquipmentsfolderController extends Controller
         // Check if the request is AJAX
         if ($request->ajax()) {
             // If it's an AJAX request, return a partial view for the table
-            return view('partials.equipmentsfolder_table', ['equipments' => $equipments]);
+            return view('partials.users_table', compact('equipments'));
         } else {
             // If it's a regular request, return the full users view
-            return view('equipmentsfolder', ['equipments' => $equipments]);
+            return view('equipmentsfolder', compact('equipments'));
         }
 
         

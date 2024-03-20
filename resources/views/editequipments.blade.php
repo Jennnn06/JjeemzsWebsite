@@ -62,13 +62,14 @@
                 <select class="form-select" name="equipmentsstatus" aria-label="Default select example" value="{{$editequipment->STATUS}}" style="width: 300px">
                     <option selected>Good</option>
                     <option value="Defective">Defective</option>
-                    <option value="Broken">Broken</option>
+                    <option value="For Repair">For Repair</option>
+                    <option value="Lost">Lost</option>
                 </select>
             </div>
 
             <!-- Available -->
             <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Available: </label>
+                <label class="col-sm-2 form-label" style="color: #f0f0f0">Availability: </label>
                 <select class="form-select" name="equipmentsavailable" aria-label="Default select example" value="{{$editequipment->AVAILABLE}}" style="width: 300px">
                     <option selected>Yes</option>
                     <option value="No">No</option>

@@ -24,9 +24,15 @@ return new class extends Migration
             $table->string('REASON')->nullable();
             $table->string('NOTE')->nullable();
             $table->string('FOLDER')->nullable();
+
+            $table->string('ITEM_SERIAL_NUMBER');
+            $table->string('BORROWED_BY');
+            $table->string('LOCATION');
             $table->timestamps();
         });
     }
+
+    
 
     /**
      * Reverse the migrations.

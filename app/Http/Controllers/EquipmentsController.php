@@ -10,17 +10,42 @@ use Illuminate\Support\Facades\File;
 class EquipmentsController extends Controller
 {
     public function index(Request $request){
-        //Search bar
-        $searchTerm = $request->input('search');
 
-        // Retrieve users based on the search term if provided
+        //Search
+        $searchTerm = $request->input('search');
+        $brandFilter = $request->input('brand');
+        $colorFilter = $request->input('color');
+
+        //Query
+        $query = Equipments::query();
+
+        // Find the data
         if ($searchTerm) {
-            $equipments = Equipments::where('ITEM_NAME', 'like', '%' . $searchTerm . '%')
-                ->get();
+            $query->where('ITEM_NAME', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($brandFilter && $brandFilter !== '-- Filter by brand --') {
+            $query->where('BRAND', $brandFilter);
+        }
+
+        if ($colorFilter && $colorFilter !== '-- Filter by color --') {
+            $query->where('COLOR', $colorFilter);
+        }
+
+        // Get the data
+        if ($searchTerm || $brandFilter || $colorFilter) {
+            // At least one filter is applied, so fetch equipments based on the filters
+            $equipments = $query->get();
         } else {
-            // Otherwise, fetch all users
             $equipments = Equipments::all();
         }
+
+        // Get unique brands and color
+        $brands = Equipments::distinct('BRAND')->pluck('BRAND')->filter();
+        $colors = Equipments::distinct('COLOR')->pluck('COLOR')->filter();
+
+        $equipments = $query->get();
+        
 
         // Check if the request is AJAX
         if ($request->ajax()) {
@@ -28,7 +53,7 @@ class EquipmentsController extends Controller
             return view('partials.equipments_table', ['equipments' => $equipments]);
         } else {
             // If it's a regular request, return the full users view
-            return view('equipments', ['equipments' => $equipments]);
+            return view('equipments', compact('equipments', 'brands', 'colors'));
         }
 
         /*Look at the Databases
