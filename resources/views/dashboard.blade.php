@@ -11,6 +11,8 @@
 
 <!-- Main Content -->
 <div class="p-0" style="flex-direction: row; flex:1; background-color:#282828 ">
+    
+    <p style="font-size: 30px; color: white; margin-left: 20px; margin-top: 30px">Dashboard</p>
 
     <!--User-->
     <div class="somelittlebox">

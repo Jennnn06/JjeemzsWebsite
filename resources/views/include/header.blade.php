@@ -1,10 +1,10 @@
 <!-- Navigation -->
 
-<nav class="navbar sticky-top flex-md-nowrap p-0 " style="background-color: #323232; height:75px; color: #f0f0f0; margin-left: 20px; border-radius:5px;">    
+<nav class="navbar sticky-top flex-md-nowrap p-0 " style="background-color: #9e9c9c; height:75px; color: #f0f0f0; margin-left: 20px; border-bottom-left-radius:5px; border-bottom-right-radius:5px;">    
     <div class="container-fluid">
         <p style="margin: 5px 0 0 5px; font-size:30px">
             @if(request()->routeIs('dashboard'))
-                <img src="assets/bg.png" style="width: 150px; height: 100px;"> Construction Services
+                <img src="assets/bg.png" style="width: 150px; height: 100px;"> Constructions Services
                 </img>
             @elseif(request()->routeIs('equipments') || request()->is('createfolder'))
                 Equipments

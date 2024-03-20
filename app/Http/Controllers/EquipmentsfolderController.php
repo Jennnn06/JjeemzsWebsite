@@ -9,9 +9,32 @@ use Illuminate\Support\Facades\File;
 
 class EquipmentsfolderController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
+        //Search bar
+        $searchTerm = $request->input('search');
+
+        // Retrieve users based on the search term if provided
+        if ($searchTerm) {
+            $equipments = Equipments::where('ITEM_NAME', 'like', '%' . $searchTerm . '%')
+                ->get();
+        } else {
+            // Otherwise, fetch all users
+            $equipments = EquipmentsFolder::all();
+        }
+
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            // If it's an AJAX request, return a partial view for the table
+            return view('partials.equipmentsfolder_table', ['equipments' => $equipments]);
+        } else {
+            // If it's a regular request, return the full users view
+            return view('equipmentsfolder', ['equipments' => $equipments]);
+        }
+
+        
+        /*
         $equipments = EquipmentsFolder::all();
-        return view('equipmentsfolder', compact('equipments'));
+        return view('equipmentsfolder', compact('equipments'));*/
     }
     
     public function create(){

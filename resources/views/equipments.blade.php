@@ -42,9 +42,31 @@
         <!-- Search bar 
         <form action="#"> 
         </form>-->
-        <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px" placeholder="Type to search...">
-        
+        <div style="display: flex; flex-direction: row;">
 
+            <!-- Searchbar -->
+            <div style="align-items: flex-start">
+                <label for="searchUserBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
+                <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Type to search...">
+            </div>
+            
+            <!-- Filter by brand -->
+            <div style="align-items: flex-start">
+                <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by brand</label>
+                <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
+                    <option selected>-- Filter by brand --</option>
+                </select>
+            </div>
+
+            <!-- Filter by color -->
+            <div style="align-items: flex-start">
+                <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by color</label>
+                <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
+                    <option selected>-- Filter by color --</option>
+                </select>
+            </div>
+        </div>
+        
         <!-- Table -->
         <div id="equipmentsTable">
             <table class="table table-striped table-hover" >

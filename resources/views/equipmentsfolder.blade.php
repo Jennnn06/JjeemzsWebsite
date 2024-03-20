@@ -9,6 +9,25 @@
 
 <link href="{{asset('css/equipmentstyles.css')}}" rel="stylesheet">
 
+<!-- jQuery CDN (if not already included) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- JavaScript AJAX Request for SEARCH BAR -->
+<script>
+    $(document).ready(function() {
+        $('#searchUserBar').on('input', function() {
+            var searchTerm = $(this).val(); // Get the search query from the input field
+            $.ajax({
+                url: '{{ route('equipments') }}', // Route to handle the search request on the server
+                method: 'GET',
+                data: { search: searchTerm }, // Pass the search query as data
+                success: function(response) {
+                    $('#boxes').html(response); // Update the users table with search results
+                }
+            });
+        });
+    });
+</script> 
 
 <!-- Equipments -->
 <div class="p-0" style="display: flex; flex:1; margin: 30px 20px 0 20px; background-color: #282828;">
@@ -23,35 +42,16 @@
         </div>
         
         <!-- Search containers -->
-        <div style="display: flex; flex-direction: row;">
-
+        <div>
             <!-- Search -->
             <div style="align-items: flex-start">
                 <label for="exampleDataList" class="form-label" style="color: #f0f0f0;">Select an equipment/tools</label>
-                <input class="form-control" list="datalistOptions" id="exampleDataList" style="width:500px;" placeholder="Type to search...">
+                <input class="form-control" list="datalistOptions" id="exampleDataList"  placeholder="Type to search...">
             </div>
-
-            <!-- Filter by brand -->
-            <div style="align-items: flex-start">
-                <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by brand</label>
-                <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
-                    <option selected>-- Filter by brand --</option>
-                </select>
-            </div>
-
-            <!-- Filter by color -->
-            <div style="align-items: flex-start">
-                <label for="filbybrand" class="form-label" style="color: #f0f0f0; margin-left: 50px">Filter by color</label>
-                <select class="form-select form-select-sm" aria-label="Small select example" id="filbybrand" style="width: 200px; margin-left: 50px; ">
-                    <option selected>-- Filter by color --</option>
-                </select>
-            </div>
-
-
         </div>
 
         <!-- Folder -->
-        <div class="boxes">
+        <div class="boxes" id="boxes">
             @foreach ($equipments as $index => $equipment)
             <div class="box">
                 <!-- ID, Edit and View-->
