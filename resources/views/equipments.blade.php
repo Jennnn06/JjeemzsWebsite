@@ -89,6 +89,7 @@
             <table class="table table-striped table-hover" >
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
+                    <th>SERIAL</th>
                     <th>ITEM NAME</th>
                     <th>BRAND</th>
                     <th>COLOR</th>
@@ -96,6 +97,8 @@
                     <th>STATUS</th>
                     <th>AVAILABILITY</th>
                     <th>IN / OUT</th>
+                    <th>BORROWED BY</th>
+                    <th>LOCATION</th>
                     <th>REASON</th>
                     <th>NOTE</th>
                     <th>FOLDER</th>
@@ -113,6 +116,7 @@
                                 <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
                                 @endif
                             </td>
+                            <th>{{$equipment ->ITEM_SERIAL_NUMBER}}</th>
                             <td>{{$equipment ->ITEM_NAME}}</td>
                             <td>{{$equipment ->BRAND}}</td>
                             <td>{{$equipment ->COLOR}}</td>
@@ -120,6 +124,8 @@
                             <td>{{$equipment ->STATUS}}</td>
                             <td>{{$equipment ->AVAILABLE}}</td>
                             <td>{{$equipment ->IN_OUT}}</td>
+                            <td>{{$equipment ->BORROWED_BY}}</td>
+                            <td>{{$equipment ->LOCATION}}</td>
                             <td>{{$equipment ->REASON}}</td>
                             <td>{{$equipment ->NOTE}}</td>
                             <td>{{$equipment ->FOLDER}}</td>

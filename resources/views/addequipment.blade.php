@@ -30,6 +30,13 @@
                 @enderror
             </div>
 
+            <!-- Equipments SERIAL NUMBER -->
+            <div class="mb-3 row">
+                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Serial Number: </label>
+                <input class="form-control" name="equipmentsserialnumber" type="text" placeholder="Enter equipment serial number" style="width: 300px">
+                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+            </div>
+
             <!-- Equipment name -->
             <div class="mb-3 row">
                 <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Equipment Name: </label>
@@ -82,6 +89,20 @@
                     <option selected>In shop</option>
                     <option value="Out">Out</option>
                 </select>
+            </div>
+
+            <!-- Borrowed by -->
+            <div class="mb-3 row">
+                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Borrowed by: </label>
+                <input class="form-control" name="equipmentsborrowedby" type="text" placeholder="Borrowed by" style="width: 300px">
+                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3 row">
+                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Location: </label>
+                <input class="form-control" name="equipmentslocation" type="text" placeholder="Location" style="width: 300px">
+                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
             </div>
             
             <!-- Reason -->

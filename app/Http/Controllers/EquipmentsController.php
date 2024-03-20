@@ -71,6 +71,7 @@ class EquipmentsController extends Controller
 
     public function store(Request $request){
         $data = $request->validate([
+            'equipmentsserialnumber' => ['nullable'],
             'equipmentsname' => ['required'],
             'equipmentsbrand' => ['nullable'],
             'equipmentscolor' => ['nullable'],
@@ -78,12 +79,15 @@ class EquipmentsController extends Controller
             'equipmentsstatus' => ['required'],
             'equipmentsavailable' => ['required'],
             'equipmentsinout' => ['required'],
+            'equipmentsborrowedby' => ['nullable'],
+            'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
             'equipmentsnote' => ['nullable'],
             'equipmentsfolder' => ['nullable']
         ]);
         
         $dataFromTable=[
+            'ITEM_SERIAL_NUMBER' => $data['equipmentsserialnumber'],
             'ITEM_NAME' => $data['equipmentsname'],
             'BRAND' => $data['equipmentsbrand'],
             'COLOR' => $data['equipmentscolor'],
@@ -91,6 +95,7 @@ class EquipmentsController extends Controller
             'STATUS' => $data['equipmentsstatus'],
             'AVAILABLE' => $data['equipmentsavailable'],
             'IN_OUT' => $data['equipmentsinout'],
+            'BORROWED_BY' => $data['equipmentsborrowedby'],
             'REASON' => $data['equipmentsreason'],
             'NOTE' => $data['equipmentsnote'],
             'FOLDER' => $data['equipmentsfolder'],
@@ -132,6 +137,7 @@ class EquipmentsController extends Controller
 
     public function update(Request $request, $id){
         $data = $request->validate([
+            'equipmentsserialnumber' => ['nullable'],
             'equipmentsname' => ['required'],
             'equipmentsbrand' => ['nullable'],
             'equipmentscolor' => ['nullable'],
@@ -139,6 +145,8 @@ class EquipmentsController extends Controller
             'equipmentsstatus' => ['required'],
             'equipmentsavailable' => ['required'],
             'equipmentsinout' => ['required'],
+            'equipmentsborrowedby' => ['nullable'],
+            'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
             'equipmentsnote' => ['nullable'],
             'equipmentsfolder' => ['nullable']
@@ -147,6 +155,7 @@ class EquipmentsController extends Controller
         $equipment = Equipments::findOrFail($id);
     
         // Update fields
+        $equipment->ITEM_SERIAL_NUMBER = $data['equipmentsserialnumber'];
         $equipment->ITEM_NAME = $data['equipmentsname'];
         $equipment->BRAND = $data['equipmentsbrand'];
         $equipment->COLOR = $data['equipmentscolor'];
@@ -154,6 +163,8 @@ class EquipmentsController extends Controller
         $equipment->STATUS = $data['equipmentsstatus'];
         $equipment->AVAILABLE = $data['equipmentsavailable'];
         $equipment->IN_OUT = $data['equipmentsinout'];
+        $equipment->BORROWED_BY = $data['equipmentsborrowedby'];
+        $equipment->LOCATION = $data['equipmentslocation'];
         $equipment->REASON = $data['equipmentsreason'];
         $equipment->NOTE = $data['equipmentsnote'];
         $equipment->FOLDER = $data['equipmentsfolder'];
