@@ -6,6 +6,7 @@ use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 
 class EquipmentsController extends Controller
 {
@@ -50,7 +51,7 @@ class EquipmentsController extends Controller
         // Check if the request is AJAX
         if ($request->ajax()) {
             // If it's an AJAX request, return a partial view for the table
-            return view('partials.equipments_table', ['equipments' => $equipments]);
+            return view('partials.equipments_table', compact('equipments', 'brands', 'colors'));
         } else {
             // If it's a regular request, return the full users view
             return view('equipments', compact('equipments', 'brands', 'colors'));
@@ -78,7 +79,6 @@ class EquipmentsController extends Controller
             'equipmentsqty' => ['required', 'numeric', 'min:1'],
             'equipmentsstatus' => ['required'],
             'equipmentsavailable' => ['required'],
-            'equipmentsinout' => ['required'],
             'equipmentsborrowedby' => ['nullable'],
             'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
@@ -94,8 +94,8 @@ class EquipmentsController extends Controller
             'QUANTITY' => $data['equipmentsqty'],
             'STATUS' => $data['equipmentsstatus'],
             'AVAILABLE' => $data['equipmentsavailable'],
-            'IN_OUT' => $data['equipmentsinout'],
             'BORROWED_BY' => $data['equipmentsborrowedby'],
+            'LOCATION' => $data['equipmentslocation'],
             'REASON' => $data['equipmentsreason'],
             'NOTE' => $data['equipmentsnote'],
             'FOLDER' => $data['equipmentsfolder'],
@@ -132,6 +132,19 @@ class EquipmentsController extends Controller
         $editequipment = Equipments::findOrFail($id);
         $equipmentsfolder = EquipmentsFolder::all();
 
+        if ($request->has('query')) {
+            $colors = Equipments::where('COLOR', 'like', '%' . $request->input('query') . '%')
+                                ->distinct('COLOR')
+                                ->pluck('COLOR')
+                                ->filter()
+                                ->toArray();
+    
+            return response()->json($colors);
+        }
+
+        // Store the previous URL in the session
+        Session::put('previous_url_equipments', url()->previous());
+
         return view('editequipments', compact('editequipment', 'equipmentsfolder'));
     }
 
@@ -144,7 +157,6 @@ class EquipmentsController extends Controller
             'equipmentsqty' => ['required', 'numeric', 'min:1'],
             'equipmentsstatus' => ['required'],
             'equipmentsavailable' => ['required'],
-            'equipmentsinout' => ['required'],
             'equipmentsborrowedby' => ['nullable'],
             'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
@@ -162,7 +174,6 @@ class EquipmentsController extends Controller
         $equipment->QUANTITY = $data['equipmentsqty'];
         $equipment->STATUS = $data['equipmentsstatus'];
         $equipment->AVAILABLE = $data['equipmentsavailable'];
-        $equipment->IN_OUT = $data['equipmentsinout'];
         $equipment->BORROWED_BY = $data['equipmentsborrowedby'];
         $equipment->LOCATION = $data['equipmentslocation'];
         $equipment->REASON = $data['equipmentsreason'];
@@ -195,7 +206,7 @@ class EquipmentsController extends Controller
         // Save the changes to the equipment
         $equipment->save();
     
-        return redirect(route('addequipments'));
+        return redirect()->to(session('previous_url_equipments'));
     }   
 
     public function delete(Equipments $equipment){

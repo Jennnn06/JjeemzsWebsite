@@ -30,7 +30,7 @@
 </style>
 
 <!-- Sidebar -->
-<div class="d-flex flex-column position-fixed" style="height:100vh; width: 210px; background-color: #323232;">
+<div class="d-flex flex-column" style="height:100vh; width: 210px; background-color: #323232; position: fixed; z-index: 1000;">
     <div class="logo" style="display:flex; justify-content: center; height:auto; width:auto; margin-top: 20px">
         <i class="fa-solid fa-building" style="color:#779933; font-size: 50px; text-align: center;"></i>
     </div>
@@ -43,7 +43,7 @@
         </a>
     </li>
     <li>
-        <a href="{{route('equipments')}}" class="nav-link{{ request()->routeIs('equipments') || request()->is('createfolder') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('equipments') || request()->is('createfolder') ? 'background-color: #779933' : '' }}">
+        <a href="{{route('equipments')}}" class="nav-link{{ request()->routeIs('equipments') || request()->is('createfolder') || request()->routeIs('equipments.viewfolder') || request()->routeIs('equipments.editfolder') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('equipments') || request()->is('createfolder') || request()->routeIs('equipments.viewfolder') || request()->routeIs('equipments.editfolder') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-toolbox" style="margin-right: 5px;"></i>
         Equipments
         </a>

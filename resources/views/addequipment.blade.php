@@ -6,6 +6,160 @@
 
 <!-- Pass the content to layout -->
 @section('content')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var selectedStatusText;
+        var selectedAvailableText;
+
+        var isStatusGood;
+        var isAvailable;
+        
+        //Function to check onLoad
+        function onStart(){
+            selectedStatusText = $('#equipmentsstatusvalue').find('option:selected').text();
+            isStatusGood = (selectedStatusText === 'Good');
+
+            selectedAvailableText = $('#equipmentsavailablevalue').find('option:selected').text();
+            isAvailable = (selectedAvailableText === 'Yes');
+
+            if(isStatusGood && isAvailable){
+                $('#equipmentsreason').hide();
+
+                $('#equipmentsborrowedby').hide();
+                $('#equipmentslocation').hide();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', false);
+                $('#equipmentsborrowedbyvalue').prop('required', false);
+                $('#equipmentslocationvalue').prop('required', false);
+            }
+            else if(isStatusGood && !isAvailable){
+                $('#equipmentsreason').hide();
+
+                $('#equipmentsborrowedby').show();
+                $('#equipmentslocation').show();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', false);
+                $('#equipmentsborrowedbyvalue').prop('required', true).show();
+                $('#equipmentslocationvalue').prop('required', true).show();
+            }
+            else if(!isStatusGood){
+                $('#equipmentsreason').show();
+
+                $('#availtext').hide();
+                $('#equipmentsavailable').hide();
+                $('#equipmentsborrowedby').hide();
+                $('#equipmentslocation').hide();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', true).show();
+                $('#equipmentsborrowedbyvalue').prop('required', false);
+                $('#equipmentslocationvalue').prop('required', false);
+            }
+            
+        }
+
+        //Check data once the website loads
+        onStart();
+
+        function onUpdate(){
+            selectedStatusText = $('#equipmentsstatusvalue').find('option:selected').text();
+            isStatusGood = (selectedStatusText === 'Good');
+
+            selectedAvailableText = $('#equipmentsavailablevalue').find('option:selected').text();
+            isAvailable = (selectedAvailableText === 'Yes');
+
+            if(isStatusGood && isAvailable){
+                //Reason
+                $('#equipmentsreason').hide();
+
+                //Texts
+                $('#availtext').show();
+                $('#equipmentsavailable').show();
+
+                //Borrowed by and location
+                $('#equipmentsborrowedby').hide();
+                $('#equipmentslocation').hide();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', false);
+                $('#equipmentsborrowedbyvalue').prop('required', false);
+                $('#equipmentslocationvalue').prop('required', false);
+            }
+            else if(isStatusGood && !isAvailable){
+                //Reason
+                $('#equipmentsreason').hide();
+
+                //Texts
+                $('#availtext').show();
+                $('#equipmentsavailable').show();
+                
+                //Borrowed by and location
+                $('#equipmentsborrowedby').show();
+                $('#equipmentslocation').show();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', false);
+                $('#equipmentsborrowedbyvalue').prop('required', true).show();
+                $('#equipmentslocationvalue').prop('required', true).show();
+            }
+            else if(!isStatusGood){
+                //Reason
+                $('#equipmentsreason').show();
+
+                //Texts
+                $('#availtext').hide();
+                $('#equipmentsavailable').hide();
+
+                //Borrowed by and location
+                $('#equipmentsborrowedby').hide();
+                $('#equipmentslocation').hide();
+
+                //Requirements
+                $('#equipmentsreasonvalue').prop('required', true).show();
+                $('#equipmentsborrowedbyvalue').prop('required', false);
+                $('#equipmentslocationvalue').prop('required', false);
+            }
+        }
+
+        // Continuously update visibility when equipment status changes
+        $('#equipmentsstatusvalue').change(function() {
+            onUpdate();
+        });
+
+        $('#equipmentsavailablevalue').change(function() {
+            onUpdate();
+        });
+        
+        // Form submission event listener
+        $('#addform').submit(function(event) {
+            if (isStatusGood && isAvailable) {
+                $('#equipmentsreasonvalue').val('');
+
+                $('#equipmentsborrowedbyvalue').val('');
+                $('#equipmentslocationvalue').val('');
+            }
+            else if (isStatusGood && !isAvailable){
+                $('#equipmentsreasonvalue').val('');
+            }
+            else if (!isStatusGood){   
+                $('#equipmentsavailablevalue').val('No');
+                $('#equipmentsborrowedbyvalue').val('');
+                $('#equipmentslocationvalue').val('');
+            }
+
+        });
+
+        // Add 'required' attribute to equipmentsnamevalue and equipmentsqtyvalue
+        $('#equipmentsnamevalue, #equipmentsqtyvalue').prop('required', true);
+
+    });
+</script>
+
 <div class="p-0" style="flex:1; margin: 30px 20px 0 20px; background-color: #282828;">
     <div style="background-color: #323232; border-radius: 5px; padding: 40px;">
         
@@ -16,121 +170,140 @@
         </div>
         
         <div style="margin-left: 20px; margin-top: 20px">
-        <form method="post" action="{{route('addequipments.store')}}" enctype="multipart/form-data">
+        <form id="addform" method="post" action="{{route('addequipments.store')}}" enctype="multipart/form-data">
             @csrf
-
-            <!-- Upload Image -->
-            <div class="mb-3 row">
-                <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0">Upload Image:</label>
-                <input class="form-control" name="upload" type="file" id="formFile" accept="image/*" style="width: 300px">
-                @error('upload')
-                <div class="invalid-feedback" style="display: block;">
-                    {{ $message }}
+            @foreach($errors->all() as $error)
+                <div class="alert alert-danger">
+                    <p>{{ $error }}</p>
                 </div>
-                @enderror
+            @endforeach
+            
+            <!-- Equipment Info -->
+            <p style="color: white; font-size: 25px;">Information</p>
+
+            <!-- 1st Div -->
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                <!-- Upload Image -->
+                <div class="mb-3">
+                    <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0; width: 200px">Upload Image:</label>
+                    <input class="form-control" name="upload" type="file" id="formFile" accept="image/*" style="width: 280px">
+                    @error('upload')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+
+                <!-- Equipment name -->
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0; width: 200px">Equipment Name: </label>
+                    <input class="form-control" id="equipmentsnamevalue" name="equipmentsname" type="text" placeholder="Enter equipment name" style="width: 330px">
+                    <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+                </div>
+
+                <!-- Equipments SERIAL NUMBER -->
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0; width: 200px">Serial Number: </label>
+                    <input class="form-control" name="equipmentsserialnumber" type="text" placeholder="Enter equipment serial number" style="width: 300px">
+                </div>
+                
             </div>
 
-            <!-- Equipments SERIAL NUMBER -->
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Serial Number: </label>
-                <input class="form-control" name="equipmentsserialnumber" type="text" placeholder="Enter equipment serial number" style="width: 300px">
-                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
-            </div>
+            <!-- 2nd Div -->
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content:last baseline">
+                <!-- Equipment brand -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0;">Brand: </label>
+                    <input class="form-control" name="equipmentsbrand" type="text" placeholder="Enter brand name" style="width: 250px; margin-right: 50px">
+                </div>
 
-            <!-- Equipment name -->
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Equipment Name: </label>
-                <input class="form-control" name="equipmentsname" type="text" placeholder="Enter equipment name" style="width: 300px">
-                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
-            </div>
+                <!-- Color -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Color: </label>
+                    <input class="form-control" name="equipmentscolor" type="text" placeholder="Color" style="width: 250px; margin-right: 50px">
+                </div>
 
-            <!-- Equipment brand -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Brand: </label>
-                <input class="form-control" name="equipmentsbrand" type="text" placeholder="Enter brand name" style="width: 300px">
-            </div>
+                <!-- Equipment quantity -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Quantity: </label>
+                    <input class="form-control" id="equipmentsqtyvalue" name="equipmentsqty" type="number" placeholder="0" style="width: 150px; margin-right: 50px">
+                </div>
 
-            <!-- Color -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Color: </label>
-                <input class="form-control" name="equipmentscolor" type="text" placeholder="Color" style="width: 300px">
-            </div>
-
-            <!-- Equipment quantity -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Quantity: </label>
-                <input class="form-control" name="equipmentsqty" type="number" placeholder="0" style="width: 300px">
+                <!-- Folder -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0">Folder: </label>
+                    <select class="form-select" name="equipmentsfolder" aria-label="Default select example" style="width: 200px; margin-right: 50px">
+                        <!--Palitan based sa folder na ginawa-->
+                        <option value="" selected>Select Folder</option>
+                        @foreach($equipmentsfolders as $folder)
+                            <option>{{ $folder->equipmentsname }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
             </div>
 
             <!-- Status -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Status: </label>
-                <select class="form-select" name="equipmentsstatus" aria-label="Default select example" style="width: 300px">
-                    <option selected>Good</option>
-                    <option value="Defective">Defective</option>
-                    <option value="For Repair">For Repair</option>
-                    <option value="Lost">Lost</option>
-                </select>
+            <p style="color: white; font-size: 25px; margin-top: 50px">Status</p>
+
+            <!-- 3rd Div -->
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                <!-- Status -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0;">Status: </label>
+                    <select id="equipmentsstatusvalue" class="form-select" name="equipmentsstatus" aria-label="Default select example" style="width: 350px; margin-right: 50px">
+                        <option selected>Good</option>
+                        <option value="Defective">Defective</option>
+                        <option value="For Repair">For Repair</option>
+                        <option value="Lost">Lost</option>
+                    </select>
+                </div>
+
+                <!-- Reason -->
+                <div class="mb-3" id="equipmentsreason">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Reason: </label>
+                    <input id="equipmentsreasonvalue" class="form-control" name="equipmentsreason" type="text" placeholder="Reason" style="width: 300px">
+                </div>
             </div>
 
-            <!-- Available -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Availability: </label>
-                <select class="form-select" name="equipmentsavailable" aria-label="Default select example" style="width: 300px">
-                    <option selected>Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
+            <!-- Availability -->
+            <p id="availtext" style="color: white; font-size: 25px; margin-top: 50px">Availability</p>
 
-            <!-- IN_OUT -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">In / Out: </label>
-                <select class="form-select" name="equipmentsinout" aria-label="Default select example" style="width: 300px">
-                    <option selected>In shop</option>
-                    <option value="Out">Out</option>
-                </select>
-            </div>
+            <!-- 4th Div -->
+            <div id="equipmentsavailable" class="mb-3" style="display: flex; flex-direction: row; justify-content:space-between; width: 1000px">
+                <!-- Available -->
+                <div class="mb-3" >
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0">Availability: </label>
+                    <select id="equipmentsavailablevalue" class="form-select" name="equipmentsavailable" aria-label="Default select example" style="width: 300px">
+                        <option selected>Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
 
-            <!-- Borrowed by -->
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Borrowed by: </label>
-                <input class="form-control" name="equipmentsborrowedby" type="text" placeholder="Borrowed by" style="width: 300px">
-                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
-            </div>
-
-            <!-- Location -->
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Location: </label>
-                <input class="form-control" name="equipmentslocation" type="text" placeholder="Location" style="width: 300px">
-                <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
-            </div>
-            
-            <!-- Reason -->
-            <div class="mb-3 row">
-                <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Reason: </label>
-                <input class="form-control" name="equipmentsreason" type="text" placeholder="Reason" style="width: 300px">
+                <!-- Borrowed by -->
+                <div class="mb-3" id="equipmentsborrowedby">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0; width: 200px">Borrowed by: </label>
+                    <input id="equipmentsborrowedbyvalue" class="form-control" name="equipmentsborrowedby" type="text" placeholder="Borrowed by" style="width: 300px">
+                    <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+                </div>
+                
+                <!-- Location -->
+                <div class="mb-3" id="equipmentslocation">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Location: </label>
+                    <input id="equipmentslocationvalue" class="form-control" name="equipmentslocation" type="text" placeholder="Location" style="width: 300px">
+                    <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+                </div>
             </div>
 
             <!-- Note -->
-            <div class="mb-3 row">
+            <div class="mb-3">
                 <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0">Note: </label>
-                <input class="form-control" name="equipmentsnote" type="text" placeholder="Note" style="width: 300px">
+                <input class="form-control" name="equipmentsnote" type="text" placeholder="Note" style="width: 300px; height: 100px">
             </div>
+            
 
-            <!-- Folder -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 form-label" style="color: #f0f0f0">Folder: </label>
-                <select class="form-select" name="equipmentsfolder" aria-label="Default select example" style="width: 300px">
-                    <!--Palitan based sa folder na ginawa-->
-                    <option value="" selected>Select Folder</option>
-                    @foreach($equipmentsfolders as $folder)
-                        <option>{{ $folder->equipmentsname }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div style="margin-left: 360px; margin-top:50px">
-                <input type="submit" class="btn btn-primary mb-3" style="width: 100px; height: 45px; background-color: #779933; color: #fff">
+            <div style="display: flex; justify-content: flex-end">
+                <input type="submit" class="btn btn-primary mb-3" style="width: 150px; height: 70px; background-color: #779933; color: #fff">
             </div>
         </form>
     </div>

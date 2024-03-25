@@ -54,8 +54,8 @@
                 <i class="fa-solid fa-screwdriver-wrench" style="font-size: 30px; color: white"></i>
             </div>
             <div class="stats" style="background-color: #323232;">
-                <p style="display: flex; justify-content: center; margin-top: 5px">Broken Equipments</p>
-                <p style="display: flex; justify-content: center; font-size: 40px; margin-top: -10px">{{$brokenCount}}</p>
+                <p style="display: flex; justify-content: center; margin-top: 5px">For Repair</p>
+                <p style="display: flex; justify-content: center; font-size: 40px; margin-top: -10px">{{$forRepairCount}}</p>
             </div>
         </div>
 

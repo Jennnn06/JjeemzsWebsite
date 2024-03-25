@@ -8,19 +8,26 @@
 @section('content')
 
 <!-- jQuery CDN (if not already included) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
-        $('#searchUserBar').on('input', function() {
-            var searchTerm = $(this).val(); // Get the search query from the input field
+        $('#searchEquipmentsBar').on('input', function() {
+            var searchTerm = $('#searchEquipmentsBar').val();
+            var folderId = '{{ $folder->id }}';
+
             $.ajax({
-                url: '{{ route('addequipments') }}', // Route to handle the search request on the server
+                url: '/equipments/' + folderId + '/view',
                 method: 'GET',
-                data: { search: searchTerm }, // Pass the search query as data
+                data: { 
+                    search: searchTerm
+                },
                 success: function(response) {
                     $('#equipmentsTable').html(response); // Update the users table with search results
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText); // Log any errors to the console
                 }
             });
         });
@@ -33,16 +40,17 @@
         
         <!-- Text and Create-->
         <div style="align-items: flex-start; display:flex; flex-direction:row; justify-content: space-between;">
-            <p style="font-size: 25px; color: #f0f0f0;">List of Equipments</p>
-            <a href="{{ url('/addequipments/add') }}" style="height: 50px; width:150px; margin-bottom: 20px; border-radius: 5px; font-size: 15px; text-decoration: none; color: white; background-color: green; text-align: center; padding-top: 15px; ">
-                Add Equipment
-            </a>
+            <p style="font-size: 25px; color: #f0f0f0;">List of {{ $folder->equipmentsname }}</p>
         </div>
 
         <!-- Search bar 
         <form action="#"> 
         </form>-->
-        <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px" placeholder="Type to search...">
+        <!-- Searchbar -->
+        <div style="align-items: flex-start">
+            <label for="searchEquipmentsBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
+            <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px;" placeholder="Type to search...">
+        </div>
         
 
         <!-- Table -->
@@ -50,13 +58,15 @@
             <table class="table table-striped table-hover" >
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
-                    <th>ITEM NAME</th>
+                    <th>SERIAL_NUM</th>
+                    <th>NAME</th>
                     <th>BRAND</th>
                     <th>COLOR</th>
                     <th>QTY</th>
                     <th>STATUS</th>
-                    <th>AVAILABLE</th>
-                    <th>IN / OUT</th>
+                    <th>AVAILABILITY</th>
+                    <th>BORROWEDBY</th>
+                    <th>LOCATION</th>
                     <th>REASON</th>
                     <th>NOTE</th>
                     <th>FOLDER</th>
@@ -69,18 +79,20 @@
                             <!--Image -->
                             <td>
                                 @if ($equipment->ITEM_IMAGE)
-                                    <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;">
+                                <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
                                 @else
-                                    <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;">
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
                                 @endif
                             </td>
+                            <th>{{$equipment ->ITEM_SERIAL_NUMBER}}</th>
                             <td>{{$equipment ->ITEM_NAME}}</td>
                             <td>{{$equipment ->BRAND}}</td>
                             <td>{{$equipment ->COLOR}}</td>
                             <td>{{$equipment ->QUANTITY}}</td>
                             <td>{{$equipment ->STATUS}}</td>
                             <td>{{$equipment ->AVAILABLE}}</td>
-                            <td>{{$equipment ->IN_OUT}}</td>
+                            <td>{{$equipment ->BORROWED_BY}}</td>
+                            <td>{{$equipment ->LOCATION}}</td>
                             <td>{{$equipment ->REASON}}</td>
                             <td>{{$equipment ->NOTE}}</td>
                             <td>{{$equipment ->FOLDER}}</td>

@@ -18,15 +18,16 @@
         <form method="post" action="{{route('createfolder.post')}}" enctype="multipart/form-data">
             @csrf
 
+            @foreach($errors->all() as $error)
+                <div class="alert alert-danger">
+                    <p>{{ $error }}</p>
+                </div>
+            @endforeach
+
             <!-- Upload Image -->
             <div class="mb-3 row">
                 <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0">Upload Image:</label>
                 <input class="form-control" name="equipmentsimage" type="file" id="formFile" accept="image/*" style="width: 300px">
-                @error('equipmentsimage')
-                <div class="invalid-feedback" style="display: block;">
-                    {{ $message }}
-                </div>
-                @enderror
             </div>
             
             <!-- Folder name -->
@@ -37,7 +38,7 @@
             </div>
 
             <div style="margin-left: 360px; margin-top:50px">
-                <input type="submit" class="btn btn-primary mb-3" style="width: 100px; height: 45px; background-color: #779933; color: #fff">
+                <button type="submit" class="btn btn-primary mb-3" style="width: 150px; height: 60px; background-color: #779933; color: #fff">Create Folder</input>
             </div>
         </form>
     </div>

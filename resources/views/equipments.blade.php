@@ -7,14 +7,12 @@
 <!-- Pass the content to layout -->
 @section('content')
 
-<!-- jQuery CDN (if not already included) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
-        $('#searchUserBar, #filbybrand, #filbycolor').on('input', function() {
-            var searchTerm = $('#searchUserBar').val();
+        $('#searchEquipmentsBar, #filbybrand, #filbycolor').on('input', function() {
+            var searchTerm = $('#searchEquipmentsBar').val();
             var brandFilter = $('#filbybrand').val();
             var colorFilter = $('#filbycolor').val();
 
@@ -27,9 +25,8 @@
                     color: colorFilter
                 },
                 success: function(response) {
-                    console.log('Response:', response);
                     $('#equipmentsTable').html(response); // Update the users table with search results
-                }
+                },
                 error: function(xhr, status, error) {
                     console.error('Error:', error); // Log any errors to the console
                 }
@@ -57,8 +54,8 @@
 
             <!-- Searchbar -->
             <div style="align-items: flex-start">
-                <label for="searchUserBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
-                <input name="search" class="form-control" list="datalistOptions" id="searchUserBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Type to search...">
+                <label for="searchEquipmentsBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
+                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Type to search...">
             </div>
             
             <!-- Filter by brand -->
@@ -89,15 +86,14 @@
             <table class="table table-striped table-hover" >
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
-                    <th>SERIAL</th>
-                    <th>ITEM NAME</th>
+                    <th>SERIAL_NUM</th>
+                    <th>NAME</th>
                     <th>BRAND</th>
                     <th>COLOR</th>
                     <th>QTY</th>
                     <th>STATUS</th>
                     <th>AVAILABILITY</th>
-                    <th>IN / OUT</th>
-                    <th>BORROWED BY</th>
+                    <th>BORROWEDBY</th>
                     <th>LOCATION</th>
                     <th>REASON</th>
                     <th>NOTE</th>
@@ -123,7 +119,6 @@
                             <td>{{$equipment ->QUANTITY}}</td>
                             <td>{{$equipment ->STATUS}}</td>
                             <td>{{$equipment ->AVAILABLE}}</td>
-                            <td>{{$equipment ->IN_OUT}}</td>
                             <td>{{$equipment ->BORROWED_BY}}</td>
                             <td>{{$equipment ->LOCATION}}</td>
                             <td>{{$equipment ->REASON}}</td>

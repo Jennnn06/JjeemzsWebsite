@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('QUANTITY');
             $table->string('STATUS');
             $table->string('AVAILABLE');
-            $table->string('IN_OUT');
             $table->string('REASON')->nullable();
             $table->string('NOTE')->nullable();
             $table->string('FOLDER')->nullable();

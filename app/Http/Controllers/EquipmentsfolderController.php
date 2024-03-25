@@ -6,6 +6,7 @@ use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\Session;
 
 class EquipmentsfolderController extends Controller
 {
@@ -13,18 +14,22 @@ class EquipmentsfolderController extends Controller
         //Search bar
         $searchTerm = $request->input('search');
 
+        $query = EquipmentsFolder::query();
+
         // Retrieve users based on the search term if provided
         if ($searchTerm) {
-            $equipments = EquipmentsFolder::where('equipmentsname', 'like', '%' . $searchTerm . '%')->get();
+            $query->where('equipmentsname', 'like', '%' . $searchTerm . '%');
         } else {
             // Otherwise, fetch all users
             $equipments = EquipmentsFolder::all();
         }
 
+        $equipments = $query->get();
+
         // Check if the request is AJAX
         if ($request->ajax()) {
             // If it's an AJAX request, return a partial view for the table
-            return view('partials.users_table', compact('equipments'));
+            return view('partials.equipments_foldertable', compact('equipments'));
         } else {
             // If it's a regular request, return the full users view
             return view('equipmentsfolder', compact('equipments'));
@@ -76,6 +81,8 @@ class EquipmentsfolderController extends Controller
     public function edit(Request $request, $id){
         //Now it will find the id from the table and store the data to variable folder
         $folder = EquipmentsFolder::findOrFail($id);
+
+        Session::put('previous_url_equipmentsfolder', url()->previous());
         
         return view('editfolder', compact('folder'));
     }
@@ -124,14 +131,34 @@ class EquipmentsfolderController extends Controller
         return redirect()->route('equipments')->with('success', 'Folder image updated successfully.');
     }
 
-    public function view($id){
+    public function view(Request $request, $id){
         // Find the folder based on the provided ID
         $folder = EquipmentsFolder::findOrFail($id);
 
-        // Retrieve the equipments belonging to the selected folder
-        $equipmentsView = Equipments::where('FOLDER', $folder->equipmentsname)->get();
+        $searchTerm = $request->input('search');
 
-        return view('viewbyfolder', ['equipmentsView' => $equipmentsView]);
+        $query = Equipments::where('FOLDER', $folder->equipmentsname);
+
+        if ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('ITEM_SERIAL_NUMBER', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('ITEM_NAME', 'like', '%' . $searchTerm . '%');
+            });
+        }
+        else{
+            $query->where('FOLDER', $folder->equipmentsname);
+        }
+
+        $equipmentsView = $query->get();
+
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            // If it's an AJAX request, return a partial view for the table
+            return view('partials.equipments_viewtable', compact('equipmentsView', 'folder'));
+        } else {
+            // If it's a regular request, return the full view
+            return view('viewbyfolder', compact('equipmentsView', 'folder'));
+        }
     }
 
 }

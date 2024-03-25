@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $totalRowsOfUser = User::count();
         $totalRowsOfEquipments = Equipments::count();
         $totalRowsOfFolders = EquipmentsFolder::count();
-        $brokenCount = Equipments::where('STATUS', 'broken')->count();
+        $forRepairCount = Equipments::where('STATUS', 'For Repair')->count();
 
         // Retrieve the necessary data from the database
         $latestMaintenances = Equipments::select('ITEM_IMAGE', 'ITEM_NAME', 'updated_at')
@@ -23,7 +23,7 @@ class DashboardController extends Controller
         ->limit(5)
         ->get();
 
-        return view('dashboard', compact('totalRowsOfUser', 'totalRowsOfEquipments', 'totalRowsOfFolders', 'brokenCount', 'latestMaintenances'));
+        return view('dashboard', compact('totalRowsOfUser', 'totalRowsOfEquipments', 'totalRowsOfFolders', 'forRepairCount', 'latestMaintenances'));
     }
 
     function dashboard(){

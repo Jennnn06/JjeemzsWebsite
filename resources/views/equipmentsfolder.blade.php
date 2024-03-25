@@ -15,22 +15,14 @@
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
-    // Trigger the AJAX request on page load
-    $.ajax({
-        url: '{{ route('equipments') }}',
-        method: 'GET',
-        success: function(response) {
-            $('#boxes').html(response);
-        }
-    });
-
-    // Listen for changes in the search input
-    $('#searchUserBar').on('input', function() {
+    $('#searchEquipmentsFolderBar').on('input', function() {
         var searchTerm = $(this).val();
         $.ajax({
             url: '{{ route('equipments') }}',
             method: 'GET',
-            data: { search: searchTerm },
+            data: { 
+                search: searchTerm 
+            },
             success: function(response) {
                 $('#boxes').html(response);
             }
@@ -57,7 +49,7 @@
             <!-- Search -->
             <div style="align-items: flex-start">
                 <label for="exampleDataList" class="form-label" style="color: #f0f0f0;">Select an equipment/tools</label>
-                <input name="search" class="form-control" list="datalistOptions" id="searchUserBar"  placeholder="Type to search...">
+                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsFolderBar"  placeholder="Type to search...">
             </div>
         </div>
 

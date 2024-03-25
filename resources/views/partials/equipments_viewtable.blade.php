@@ -15,11 +15,11 @@
             <th>REASON</th>
             <th>NOTE</th>
             <th>FOLDER</th>
-            <th>EDIT</th>
-            <th style="border-top-right-radius: 5px;">DELETE</th>
+            <th>Edit</th>
+            <th style="border-top-right-radius: 5px;">Delete</th>
         </thead>
         <tbody class="table-group-divider">
-            @foreach($equipments as $equipment)
+            @foreach($equipmentsView as $equipment)
                 <tr>
                     <!--Image -->
                     <td>
@@ -67,3 +67,4 @@
             @endforeach
         </tbody>
     </table>
+</div>

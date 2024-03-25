@@ -13,6 +13,7 @@ class Equipments extends Model
     protected $table = 'equipments';
 
     protected $fillable = [
+        'ITEM_SERIAL_NUMBER',
         'ITEM_IMAGE',
         'ITEM_NAME',
         'BRAND',
@@ -20,7 +21,8 @@ class Equipments extends Model
         'QUANTITY',
         'STATUS',
         'AVAILABLE',
-        'IN_OUT',
+        'BORROWED_BY',
+        'LOCATION',
         'REASON',
         'NOTE',
         'FOLDER',
