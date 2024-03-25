@@ -154,42 +154,42 @@
 
         });
 
+        //COLORS
+        $('#equipmentscolorvalue').on('input', function() {
+            var searchTerm = $(this).val();
 
-    $('#equipmentscolorvalue').on('input', function() {
-        var searchTerm = $(this).val();
-
-        // Send AJAX request to fetch color suggestions
-        $.ajax({
-            url: '/editequipments/{{$editequipment->id}}',
-            method: 'GET',
-            data: {
-                query: searchTerm
-            },
-            success: function(response) {
-                // Update color suggestions
-                $('#colorSuggestions').empty();
-                
-                // Create bubbles for each suggestion
-                response.forEach(function(suggestion) {
-                    var bubble = $('<div class="color-bubble"></div>').text(suggestion);
+            // Send AJAX request to fetch color suggestions
+            $.ajax({
+                url: '/editequipments/{{$editequipment->id}}',
+                method: 'GET',
+                data: {
+                    query: searchTerm
+                },
+                success: function(response) {
+                    // Update color suggestions
+                    $('#colorSuggestions').empty();
                     
-                    // Attach click event to each bubble
-                    bubble.on('click', function() {
-                        // Set the clicked suggestion as the input value
-                        $('#equipmentscolorvalue').val(suggestion);
+                    // Create bubbles for each suggestion
+                    response.forEach(function(suggestion) {
+                        var bubble = $('<div class="color-bubble"></div>').text(suggestion);
                         
-                        // You can perform additional actions here if needed
-                        
-                        // Clear suggestions after selection
-                        $('#colorSuggestions').empty();
-                    });
+                        // Attach click event to each bubble
+                        bubble.on('click', function() {
+                            // Set the clicked suggestion as the input value
+                            $('#equipmentscolorvalue').val(suggestion);
+                            
+                            // You can perform additional actions here if needed
+                            
+                            // Clear suggestions after selection
+                            $('#colorSuggestions').empty();
+                        });
 
-                    // Append the bubble to the container
-                    $('#colorSuggestions').append(bubble);
-                });
-            }
+                        // Append the bubble to the container
+                        $('#colorSuggestions').append(bubble);
+                    });
+                }
+            });
         });
-    });
 
         
     });

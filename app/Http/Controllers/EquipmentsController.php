@@ -62,9 +62,19 @@ class EquipmentsController extends Controller
         return view('equipments', compact('equipments'));*/
     }
     
-    public function add(){
+    public function add(Request $request){
         // Fetch all records from the equipmentsfolder table
         $equipmentsfolders = EquipmentsFolder::all();
+
+        if ($request->has('query')) {
+            $colors = Equipments::where('COLOR', 'like', '%' . $request->input('query') . '%')
+                                ->distinct('COLOR')
+                                ->pluck('COLOR')
+                                ->filter()
+                                ->toArray();
+    
+            return response()->json($colors);
+        }
 
         // Pass the $equipmentsfolders variable to the view using compact()
         return view('addequipment', compact('equipmentsfolders'));

@@ -154,6 +154,42 @@
 
         });
 
+        $('#equipmentscolorvalue').on('input', function() {
+            var searchTerm = $(this).val();
+
+            // Send AJAX request to fetch color suggestions
+            $.ajax({
+                url: '/addequipments/add',
+                method: 'GET',
+                data: {
+                    query: searchTerm
+                },
+                success: function(response) {
+                    // Update color suggestions
+                    $('#colorSuggestions').empty();
+                    
+                    // Create bubbles for each suggestion
+                    response.forEach(function(suggestion) {
+                        var bubble = $('<div class="color-bubble"></div>').text(suggestion);
+                        
+                        // Attach click event to each bubble
+                        bubble.on('click', function() {
+                            // Set the clicked suggestion as the input value
+                            $('#equipmentscolorvalue').val(suggestion);
+                            
+                            // You can perform additional actions here if needed
+                            
+                            // Clear suggestions after selection
+                            $('#colorSuggestions').empty();
+                        });
+
+                        // Append the bubble to the container
+                        $('#colorSuggestions').append(bubble);
+                    });
+                }
+            });
+        });
+
         // Add 'required' attribute to equipmentsnamevalue and equipmentsqtyvalue
         $('#equipmentsnamevalue, #equipmentsqtyvalue').prop('required', true);
 
@@ -211,6 +247,7 @@
 
             <!-- 2nd Div -->
             <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content:last baseline">
+
                 <!-- Equipment brand -->
                 <div class="mb-3">
                     <label class="col-sm-2 form-label" style="color: #f0f0f0;">Brand: </label>
@@ -218,9 +255,10 @@
                 </div>
 
                 <!-- Color -->
-                <div class="mb-3">
+                <div class="mb-3 autocomplete" style="position: relative">
                     <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Color: </label>
-                    <input class="form-control" name="equipmentscolor" type="text" placeholder="Color" style="width: 250px; margin-right: 50px">
+                    <input id="equipmentscolorvalue" class="form-control" name="equipmentscolor" type="text" placeholder="Color" style="width: 250px; margin-right: 50px">
+                    <div id="colorSuggestions" class="suggestions-container" style="background-color:white; color: #000000; border-radius: 5px; position: absolute; top: 100%; left: 0; z-index: 100; width: 100%;"></div>
                 </div>
 
                 <!-- Equipment quantity -->
