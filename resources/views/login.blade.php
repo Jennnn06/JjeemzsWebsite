@@ -9,7 +9,7 @@
 </head>
 <body>
     <section>
-    <img src="{{ asset('assets/logosample.png') }}" alt="Logo" class = logo>
+    <img src="{{ asset('assets/logosample.png') }}" alt="Logo" class="logo">
     <h2 class="logotext">CONSTRUCTION SERVICES</h2>
     <!-- Box for username/pass/remember me input -->
         <div class="form-box">  
