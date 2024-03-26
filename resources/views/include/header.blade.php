@@ -7,9 +7,9 @@
                 <img src="assets/bg.png" style="width: 150px; height: 100px;"> JJEEMZS Constructions Services
                 </img>
             @elseif(request()->routeIs('equipments') || request()->is('createfolder') || request()->routeIs('equipments.viewfolder') || request()->routeIs('equipments.editfolder') )
-                Equipments
+                Tools & Equipments
             @elseif(request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit'))
-                Add Equipments
+                Add Tools & Equipments
             @elseif(request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers'))
                 Manage Users
             @else

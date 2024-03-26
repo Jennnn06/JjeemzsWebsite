@@ -22,7 +22,8 @@ class EquipmentsController extends Controller
 
         // Find the data
         if ($searchTerm) {
-            $query->where('ITEM_NAME', 'like', '%' . $searchTerm . '%');
+            $query->where('ITEM_NAME', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('ITEM_SERIAL_NUMBER', 'like', '%' . $searchTerm . '%');;
         }
 
         if ($brandFilter && $brandFilter !== '-- Filter by brand --') {
@@ -67,13 +68,27 @@ class EquipmentsController extends Controller
         $equipmentsfolders = EquipmentsFolder::all();
 
         if ($request->has('query')) {
-            $colors = Equipments::where('COLOR', 'like', '%' . $request->input('query') . '%')
-                                ->distinct('COLOR')
-                                ->pluck('COLOR')
-                                ->filter()
-                                ->toArray();
+            $query = $request->input('query');
+            
+            // Check if the query is for color or brand
+            if ($request->has('color')) {
+                $suggestions = Equipments::where('COLOR', 'like', '%' . $query . '%')
+                    ->distinct('COLOR')
+                    ->pluck('COLOR')
+                    ->filter()
+                    ->toArray();
+            } elseif ($request->has('brand')) {
+                $suggestions = Equipments::where('BRAND', 'like', '%' . $query . '%')
+                    ->distinct('BRAND')
+                    ->pluck('BRAND')
+                    ->filter()
+                    ->toArray();
+            } else {
+                // Handle invalid request
+                return response()->json(['error' => 'Invalid request'], 400);
+            }
     
-            return response()->json($colors);
+            return response()->json($suggestions);
         }
 
         // Pass the $equipmentsfolders variable to the view using compact()
@@ -143,13 +158,27 @@ class EquipmentsController extends Controller
         $equipmentsfolder = EquipmentsFolder::all();
 
         if ($request->has('query')) {
-            $colors = Equipments::where('COLOR', 'like', '%' . $request->input('query') . '%')
-                                ->distinct('COLOR')
-                                ->pluck('COLOR')
-                                ->filter()
-                                ->toArray();
+            $query = $request->input('query');
+            
+            // Check if the query is for color or brand
+            if ($request->has('color')) {
+                $suggestions = Equipments::where('COLOR', 'like', '%' . $query . '%')
+                    ->distinct('COLOR')
+                    ->pluck('COLOR')
+                    ->filter()
+                    ->toArray();
+            } elseif ($request->has('brand')) {
+                $suggestions = Equipments::where('BRAND', 'like', '%' . $query . '%')
+                    ->distinct('BRAND')
+                    ->pluck('BRAND')
+                    ->filter()
+                    ->toArray();
+            } else {
+                // Handle invalid request
+                return response()->json(['error' => 'Invalid request'], 400);
+            }
     
-            return response()->json($colors);
+            return response()->json($suggestions);
         }
 
         // Store the previous URL in the session

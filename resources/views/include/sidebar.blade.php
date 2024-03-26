@@ -45,13 +45,13 @@
     <li>
         <a href="{{route('equipments')}}" class="nav-link{{ request()->routeIs('equipments') || request()->is('createfolder') || request()->routeIs('equipments.viewfolder') || request()->routeIs('equipments.editfolder') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('equipments') || request()->is('createfolder') || request()->routeIs('equipments.viewfolder') || request()->routeIs('equipments.editfolder') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-toolbox" style="margin-right: 5px;"></i>
-        Equipments
+        Tools & Equipments
         </a>
     </li>
     <li>
         <a href="{{route('addequipments')}}" class="nav-link{{ request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px;  {{ request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit') ? 'background-color: #779933' : '' }}">
             <i class="fa-solid fa-plus" style="margin-right: 5px;"></i>
-        Add Equipments
+        Add Tools & Equipments
         </a>
     </li>
     <li>

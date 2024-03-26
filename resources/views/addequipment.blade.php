@@ -154,6 +154,7 @@
 
         });
 
+        // COLORS SUGGESTIONS
         $('#equipmentscolorvalue').on('input', function() {
             var searchTerm = $(this).val();
 
@@ -162,14 +163,18 @@
                 url: '/addequipments/add',
                 method: 'GET',
                 data: {
-                    query: searchTerm
+                    query: searchTerm,
+                    color: true // Specify that we are fetching color suggestions
                 },
                 success: function(response) {
                     // Update color suggestions
                     $('#colorSuggestions').empty();
+
+                    // Limit the number of suggestions to 5
+                    var suggestions = response.slice(0, 5);
                     
                     // Create bubbles for each suggestion
-                    response.forEach(function(suggestion) {
+                    suggestions.forEach(function(suggestion) {
                         var bubble = $('<div class="color-bubble"></div>').text(suggestion);
                         
                         // Attach click event to each bubble
@@ -186,6 +191,59 @@
                         // Append the bubble to the container
                         $('#colorSuggestions').append(bubble);
                     });
+                    // If suggestions exceed 5, make them scrollable
+                    if (response.length > 5) {
+                        $('#colorSuggestions').addClass('scrollable');
+                    } else {
+                        $('#colorSuggestions').removeClass('scrollable');
+                    }
+                }
+            });
+        });
+
+        // BRANDS SUGGESTIONS
+        $('#equipmentsbrandvalue').on('input', function() {
+            var searchTerm = $(this).val();
+
+            // Send AJAX request to fetch brand suggestions
+            $.ajax({
+                url: '/addequipments/add',
+                method: 'GET',
+                data: {
+                    query: searchTerm,
+                    brand: true // Specify that we are fetching brand suggestions
+                },
+                success: function(response) {
+                    // Update brand suggestions
+                    $('#brandSuggestions').empty();
+
+                    // Limit the number of suggestions to 5
+                    var suggestions = response.slice(0, 5);
+                    
+                    // Create bubbles for each suggestion
+                    suggestions.forEach(function(suggestion) {
+                        var bubble = $('<div class="brand-bubble"></div>').text(suggestion);
+                        
+                        // Attach click event to each bubble
+                        bubble.on('click', function() {
+                            // Set the clicked suggestion as the input value
+                            $('#equipmentsbrandvalue').val(suggestion);
+                            
+                            // You can perform additional actions here if needed
+                            
+                            // Clear suggestions after selection
+                            $('#brandSuggestions').empty();
+                        });
+
+                        // Append the bubble to the container
+                        $('#brandSuggestions').append(bubble);
+                    });
+                    // If suggestions exceed 5, make them scrollable
+                    if (response.length > 5) {
+                        $('#brandSuggestions').addClass('scrollable');
+                    } else {
+                        $('#brandSuggestions').removeClass('scrollable');
+                    }
                 }
             });
         });
@@ -249,16 +307,17 @@
             <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content:last baseline">
 
                 <!-- Equipment brand -->
-                <div class="mb-3">
+                <div class="mb-3" style="position: relative">
                     <label class="col-sm-2 form-label" style="color: #f0f0f0;">Brand: </label>
-                    <input class="form-control" name="equipmentsbrand" type="text" placeholder="Enter brand name" style="width: 250px; margin-right: 50px">
+                    <input id="equipmentsbrandvalue" class="form-control" name="equipmentsbrand" type="text" placeholder="Enter brand name" style="width: 250px; margin-right: 50px">
+                    <div id="brandSuggestions" class="suggestions-container" style="background-color:white; color: #000000; border-radius: 5px; position: absolute; top: 100%; left: 0; z-index: 100; width: 260px; font-size: 20px; cursor: default;"></div>
                 </div>
 
                 <!-- Color -->
-                <div class="mb-3 autocomplete" style="position: relative">
+                <div class="mb-3" style="position: relative">
                     <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Color: </label>
                     <input id="equipmentscolorvalue" class="form-control" name="equipmentscolor" type="text" placeholder="Color" style="width: 250px; margin-right: 50px">
-                    <div id="colorSuggestions" class="suggestions-container" style="background-color:white; color: #000000; border-radius: 5px; position: absolute; top: 100%; left: 0; z-index: 100; width: 100%;"></div>
+                    <div id="colorSuggestions" class="suggestions-container" style="background-color:white; color: #000000; border-radius: 5px; position: absolute; top: 100%; left: 0; z-index: 100; width: 260px; font-size: 20px;"></div>
                 </div>
 
                 <!-- Equipment quantity -->

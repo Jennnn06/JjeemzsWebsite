@@ -55,7 +55,7 @@
             <!-- Searchbar -->
             <div style="align-items: flex-start">
                 <label for="searchEquipmentsBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
-                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Type to search...">
+                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Search for name or serial number...">
             </div>
             
             <!-- Filter by brand -->
