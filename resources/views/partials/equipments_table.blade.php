@@ -1,6 +1,6 @@
 <!-- Table -->
 <div id="equipmentsTable">
-    <table class="table table-striped table-hover" >
+    <table class="table table-striped table-hover" style="font-size: 70%">
         <thead>
             <th style="border-top-left-radius: 5px;">IMAGE</th>
             <th>SERIAL_NUM</th>

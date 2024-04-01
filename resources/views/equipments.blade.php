@@ -8,6 +8,7 @@
 @section('content')
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
@@ -83,7 +84,7 @@
         
         <!-- Table -->
         <div id="equipmentsTable">
-            <table class="table table-striped table-hover" >
+            <table class="table table-striped table-hover" style="font-size: 70%">
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
                     <th>SERIAL_NUM</th>
@@ -98,7 +99,7 @@
                     <th>REASON</th>
                     <th>NOTE</th>
                     <th>FOLDER</th>
-                    <th>Edit</th>
+                    <th>EDIT</th>
                     <th style="border-top-right-radius: 5px;">Delete</th>
                 </thead>
                 <tbody class="table-group-divider">
@@ -145,7 +146,7 @@
                                     </button>
                                 </form>
                             </td>
-
+                            
                         </tr>
                     @endforeach
                 </tbody>
@@ -154,4 +155,5 @@
 
     </div>
 </div>
+
 @endsection

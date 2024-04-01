@@ -32,37 +32,29 @@ html, body {
 .bigstats{
     text-align: center;
     font-weight: bold;
-    width: 450px;
-    height: 255px;
     border-radius: 5px;
     color: #f0f0f0;
     background-color: #323232;
 }
 
+.activeusers{
+    background-color: #323232;
+    display: flex;
+    flex-direction: column;
+    color: #f0f0f0;
+    text-align: center;
+    font-weight: bold;
+    width: 450px;
+    min-height: 400px;
+    border-radius: 5px;
+}
+
 .maint{
     display: flex;
     flex-direction: column;
-    width: 750px;
+    width: 625px;
     height: auto;
-    margin-right: 5px;
-}
-
-.calendar{
-    width: 300px;
-    background-color: lightsalmon;
-    justify-content: center;
-    align-items: center;
-}
-
-#calendar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 150px;
-    font-size: 40px;
-    background-color: white;
-    color: #323232;
+    margin-left: 5px;
 }
 
 #month, #date, #year, #day {

@@ -14,15 +14,27 @@
     
     <p style="font-size: 30px; color: white; margin-left: 20px; margin-top: 30px">Dashboard</p>
 
-    <!--User-->
+    <!--Calendar-->
     <div class="somelittlebox">
         <div style="display: flex; flex-direction:row;">
             <div style="display:flex; align-items: center; justify-content:center; width: 50px; height: 110px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; background-color: lightsalmon">
-                <i class="fa-solid fa-user" style="font-size: 30px; color: white"></i>
+                <i class="fa-regular fa-calendar-days" style="font-size: 30px; color: white"></i>
             </div>
             <div class="stats" style="background-color: #323232;">
-                <p style="display: flex; justify-content: center; margin-top: 5px">Total User</p>
-                <p style="display: flex; justify-content: center; font-size: 40px; margin-top: -10px">{{$totalRowsOfUser}}</p>
+                <p style="display: flex; justify-content: center;">
+                    <div style="display: flex; flex-direction: row; justify-content: center; font-size: 20px">
+                        <div>Today is</div>
+                        <div id="day">Wednesday</div>
+                    </div>
+                </p>
+                <p style="display: flex; justify-content: center; font-size: 40px; margin-top: -25px">
+                    <div style="display: flex; flex-direction: row; justify-content: center; font-size: 20px">
+                        <div id="month" style="margin-right: -5px">month</div>
+                        <div id="date" style="margin-right: 1px">date</div>
+                        <div style="margin-right: -5px">,</div>
+                        <div id="year">year</div> 
+                    </div>
+                </p>
             </div>
         </div>
 
@@ -62,6 +74,31 @@
     </div>
                     
     <div class="bigbox">
+
+        <div class="activeusers">
+            <p style="display: flex; justify-content: center; margin-top: 5px; font-size: 20px">Users</p>
+            <div style="margin: 10px;">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Time Active</th>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        @foreach($usersTable as $user)
+                        <tr>
+                            <td>{{$user->name}}</td>
+                            <td>{{$user->ACTIVE_STATUS}}</td>
+                            <td>{{$user->ACTIVE_LOCATION}}</td>
+                            <td>{{$user->TIME_ACTIVE}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="bigstats maint">
             <p style="display: flex; justify-content: center; margin-top: 5px; font-size: 20px">Latest Maintenance</p>
             <div id="table" style="margin: 10px;">
@@ -75,24 +112,19 @@
                         @foreach($latestMaintenances as $maintenance)
                         <tr>
                             <td>
-                                <img src="{{ $maintenance->ITEM_IMAGE }}" alt="{{ $maintenance->ITEM_NAME }}" style="width: 50px; height: 50px;">
+                                @if ($maintenance->ITEM_IMAGE)
+                                <img src="{{ $maintenance->ITEM_IMAGE }}" alt="{{ $maintenance->ITEM_NAME }}" style="width: 50px; height: 50px;" loading="lazy">
+                                @else
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
+                                @endif
                             </td>
                             <td>{{ $maintenance->ITEM_NAME }}</td>
-                            <td>{{ $maintenance->updated_at }}</td>
+                            <td>{{ \Carbon\Carbon::parse($maintenance->updated_at)->format('m-d-Y h:i A') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="bigstats calendar">
-            <div id="day" style="margin: 10px; font-size: 20px">Wednesday</div>
-            <div id="calendar">
-                <div id="month">month</div>
-                <div id="date">date</div>
-            </div>
-            <div id="year" style="margin: 10px; font-size: 20px">year</div>
         </div>
 
     </div>

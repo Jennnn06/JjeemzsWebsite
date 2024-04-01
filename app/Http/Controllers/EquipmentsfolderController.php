@@ -2,15 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class EquipmentsfolderController extends Controller
 {
     public function index(Request $request){
+        //Update the time active
+        $user = Auth::user();
+
+        // Update TIME_ACTIVE to current time in 12-hour format
+        User::where('id', $user->id)->update(['TIME_ACTIVE' => Carbon::now()->format('m-d-Y h:i A')]);
+        
+        User::where('id', $user->id)->update(['ACTIVE_LOCATION' => 'Tools & Equipments']);
+
         //Search bar
         $searchTerm = $request->input('search');
 

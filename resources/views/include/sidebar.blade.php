@@ -54,12 +54,14 @@
         Add Tools & Equipments
         </a>
     </li>
-    <li>
-        <a href="{{route('manageusers')}}" class="nav-link{{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? 'background-color: #779933' : '' }}">
-            <i class="fa-solid fa-users" style="margin-right: 5px;"></i>
-        Manage Users
-        </a>
-    </li>
+    @if(Auth::user()->id === 1)
+        <li>
+            <a href="{{route('manageusers')}}" class="nav-link{{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? 'background-color: #779933' : '' }}">
+                <i class="fa-solid fa-users" style="margin-right: 5px;"></i>
+            Manage Users
+            </a>
+        </li>
+    @endif
     <li>
         <a href="{{route('logout')}}" class="nav-link link-body-emphasis customhover logout-link">
             <i class="fa-solid fa-right-from-bracket" style="margin: 5px;"></i>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="{{ asset('css/loginstyles.css') }}">
+    
 </head>
 <body>
     <section>
@@ -19,15 +20,22 @@
                 <form method="POST" action="{{route('login.post')}}" >
                     @csrf
 
-                    @if ($errors->any())
-                        <div>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    <div class="mt-5">
+                        @if ($errors->any())
+                          <div class="col-12">
+                            @foreach($errors->all() as $error)
+                              <div class="alert alert-danger">{{$error}}</div>
+                            @endforeach  
+                          </div>
+                        @endif
+
+                        @if(@session('error'))
+                            <div class="alert alert-danger">
+                                {{session('error')}}    
+                            </div>
+                        @endif
+                           
+                      </div>
                     <!-- Username -->
                     <div class="inputbox">
                         <span class="icon"><ion-icon name="person"></ion-icon></span>
@@ -42,8 +50,11 @@
                     </div>
                     <!-- Forgot Password -->
                     <div class="remember-forgot">
+                        @if($userCount < 2)
                         <a href="{{route('register')}}">Create a new account</a>
-                        <a href="#">Forgot Password?</a>
+                        @else
+                        <a href="#"></a>
+                        @endif
                     </div>
                     <!-- Login Button -->
                     <button type="submit" class="button">Login</button>

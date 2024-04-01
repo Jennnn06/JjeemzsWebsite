@@ -55,7 +55,7 @@
 
         <!-- Table -->
         <div id="equipmentsTable">
-            <table class="table table-striped table-hover" >
+            <table class="table table-striped table-hover" style="font-size: 70%">
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
                     <th>SERIAL_NUM</th>
@@ -70,8 +70,8 @@
                     <th>REASON</th>
                     <th>NOTE</th>
                     <th>FOLDER</th>
-                    <th>Edit</th>
-                    <th style="border-top-right-radius: 5px;">Delete</th>
+                    <th>EDIT</th>
+                    <th style="border-top-right-radius: 5px;">DELETE</th>
                 </thead>
                 <tbody class="table-group-divider">
                     @foreach($equipmentsView as $equipment)
