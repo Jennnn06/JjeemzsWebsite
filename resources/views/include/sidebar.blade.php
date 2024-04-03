@@ -54,6 +54,12 @@
         Add Tools & Equipments
         </a>
     </li>
+    <li>
+        <a href="{{route('loghistory')}}" class="nav-link link-body-emphasis customhover" style="margin-bottom: 30px;">
+            <i class="fa-solid fa-book-open" style="margin-right: 5px;"></i>
+        Log History
+        </a>
+    </li>
     @if(Auth::user()->id === 1)
         <li>
             <a href="{{route('manageusers')}}" class="nav-link{{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers') ? 'background-color: #779933' : '' }}">

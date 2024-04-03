@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class AuthController extends Controller
@@ -52,15 +53,19 @@ class AuthController extends Controller
         if(Auth::attempt($credentials)){
             $user = Auth::user(); // Get the authenticated user
 
-            if($user->ACTIVE_STATUS === 'Active'){
-                Auth::logout();
-                return redirect(route('login'))->with("error", "User is already logged in.");
-            }
+            // Retrieve existing session tokens or initialize as empty array
+            $sessionTokens = json_decode($user->session_tokens, true) ?? [];
 
-            // Update ACTIVE_STATUS to 'Active' directly in the database
-            User::where('id', $user->id)->update(['ACTIVE_STATUS' => 'Active']);
-            User::where('id', $user->id)->update(['TIME_ACTIVE' => Carbon::now()->format('h:i A')]);
-            User::where('id', $user->id)->update(['ACTIVE_LOCATION' => 'Dashboard']);
+            // Append current session ID
+            $sessionTokens[] = session()->getId();
+
+            // Update user details including session_tokens
+            User::where('id', $user->id)->update([
+                'ACTIVE_STATUS' => 'Active',
+                'TIME_ACTIVE' => Carbon::now()->format('m-d-Y h:i A'),
+                'ACTIVE_LOCATION' => 'Dashboard',
+                'session_tokens' => json_encode($sessionTokens)
+            ]);
 
             return redirect()->intended(route('dashboard'));
         }
@@ -95,18 +100,48 @@ class AuthController extends Controller
         if(Auth::check()){ // Check if the user is authenticated
             $user = Auth::user(); // Get the authenticated user
             
-            // Update ACTIVE_STATUS to 'Offline' directly in the database
-            User::where('id', $user->id)->update(['ACTIVE_STATUS' => 'Offline']);
-            User::where('id', $user->id)->update(['ACTIVE_LOCATION' => 'N/A']);
+            // Retrieve existing session tokens and decode JSON
+            $sessionTokens = json_decode($user->session_tokens ?? '[]', true);
 
-            // Update TIME_ACTIVE to current time in 12-hour format
-            User::where('id', $user->id)->update(['TIME_ACTIVE' => Carbon::now()->format('h:i A')]);
+            // Remove current session token from the list
+            $sessionTokens = array_diff($sessionTokens, [session()->getId()]);
+
+            User::where('id', $user->id)->update([
+                'ACTIVE_STATUS' => 'Offline',
+                'ACTIVE_LOCATION' => 'N/A',
+                'TIME_ACTIVE' => Carbon::now()->format('m-d-Y h:i A'),
+                'session_tokens' => json_encode($sessionTokens),
+            ]);
+        
         }
 
-        Session::flush();
         Auth::logout();
         return redirect(route('login'));
     }
+
+    // public function forceLogout()
+    // {
+    //     // Get all active user sessions
+    //     $activeUsers = User::where('ACTIVE_STATUS', 'Active')->get();
+
+    //     // Loop through each active user session and logout
+    //     foreach ($activeUsers as $user) {
+    //         // Optionally, you can update additional user properties like ACTIVE_STATUS, etc.
+    //         $user->update([
+    //             'ACTIVE_STATUS' => 'Offline',
+    //             'ACTIVE_LOCATION' => 'N/A',
+    //             'TIME_ACTIVE' => now()->format('m-d-Y h:i A')
+    //         ]);
+
+    //         // Flush the current session and logout the current user
+    //         Session::flush();
+    //         Auth::logout();
+    //     }
+
+    
+    //     // Redirect to the login page
+    //     return redirect()->route('login')->with('success', 'All users have been logged out.');
+    // }
     
 
 }

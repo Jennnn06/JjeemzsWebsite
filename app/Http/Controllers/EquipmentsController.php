@@ -32,7 +32,8 @@ class EquipmentsController extends Controller
         // Find the data
         if ($searchTerm) {
             $query->where('ITEM_NAME', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('ITEM_SERIAL_NUMBER', 'like', '%' . $searchTerm . '%');;
+                  ->orWhere('ITEM_SERIAL_NUMBER', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('ITEM_CODE', 'like', '%' . $searchTerm . '%');
         }
 
         if ($brandFilter && $brandFilter !== '-- Filter by brand --') {

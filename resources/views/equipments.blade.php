@@ -56,7 +56,7 @@
             <!-- Searchbar -->
             <div style="align-items: flex-start">
                 <label for="searchEquipmentsBar" class="form-label" style="color: #f0f0f0; ">Select an equipment/tools</label>
-                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Search for name or serial number...">
+                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; width: 500px" placeholder="Search for name, code or serial number...">
             </div>
             
             <!-- Filter by brand -->
@@ -87,7 +87,8 @@
             <table class="table table-striped table-hover" style="font-size: 70%">
                 <thead>
                     <th style="border-top-left-radius: 5px;">IMAGE</th>
-                    <th>SERIAL_NUM</th>
+                    <th>CODE</th>
+                    <th>SERIAL</th>
                     <th>NAME</th>
                     <th>BRAND</th>
                     <th>COLOR</th>
@@ -108,11 +109,12 @@
                             <!--Image -->
                             <td>
                                 @if ($equipment->ITEM_IMAGE)
-                                <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
+                                <img src="{{ asset($equipment->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @else
-                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 50px; height: 50px;" loading="lazy">
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @endif
                             </td>
+                            <th>{{$equipment ->ITEM_CODE}}</th>
                             <th>{{$equipment ->ITEM_SERIAL_NUMBER}}</th>
                             <td>{{$equipment ->ITEM_NAME}}</td>
                             <td>{{$equipment ->BRAND}}</td>

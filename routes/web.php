@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentsController;
 use App\Http\Controllers\EquipmentsfolderController;
+use App\Http\Controllers\LogHistoryController;
 use App\Http\Controllers\UserController;
 use App\Models\Equipments;
 use App\Models\EquipmentsFolder;
@@ -24,6 +25,8 @@ Route::post('/register', [AuthController::class, 'registerPost'])->name('registe
 
 //Logout
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+// Route::get('force-logout', [AuthController::class, 'forceLogout'])->name('force-logout');
 
 //Access dashboard through authentication
 Route::group(['middleware' => 'auth'], function(){
@@ -66,6 +69,9 @@ Route::group(['middleware' => 'auth'], function(){
     //Edit update and delete Equipment
     Route::get('/editequipments/{id}', [EquipmentsController::class, 'edit'])->name('editequipments.edit');
     Route::put('/editequipments/{id}', [EquipmentsController::class, 'update'])->name('editequipments.update');
+
+    //History
+    Route::get('/loghistory', [LogHistoryController::class, 'index'])->name('loghistory');
     
 
     /* Mas easy, Dynamic content loading route

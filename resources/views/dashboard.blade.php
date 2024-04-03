@@ -81,7 +81,6 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <th>Name</th>
-                        <th>Status</th>
                         <th>Location</th>
                         <th>Time Active</th>
                     </thead>
@@ -89,7 +88,6 @@
                         @foreach($usersTable as $user)
                         <tr>
                             <td>{{$user->name}}</td>
-                            <td>{{$user->ACTIVE_STATUS}}</td>
                             <td>{{$user->ACTIVE_LOCATION}}</td>
                             <td>{{$user->TIME_ACTIVE}}</td>
                         </tr>
