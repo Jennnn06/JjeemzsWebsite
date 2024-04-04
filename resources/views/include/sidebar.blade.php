@@ -55,7 +55,7 @@
         </a>
     </li>
     <li>
-        <a href="{{route('loghistory')}}" class="nav-link link-body-emphasis customhover" style="margin-bottom: 30px;">
+        <a href="{{route('loghistory')}}" class="nav-link {{ request()->routeIs('loghistory') ? ' active' : ' link-body-emphasis' }} customhover" style="margin-bottom: 30px; {{ request()->routeIs('loghistory') ? 'background-color: #779933' : '' }} ">
             <i class="fa-solid fa-book-open" style="margin-right: 5px;"></i>
         Log History
         </a>

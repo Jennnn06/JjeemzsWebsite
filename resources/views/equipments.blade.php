@@ -42,9 +42,9 @@
         
         <!-- Text and Create-->
         <div style="align-items: flex-start; display:flex; flex-direction:row; justify-content: space-between;">
-            <p style="font-size: 25px; color: #f0f0f0;">List of Equipments</p>
-            <a href="{{ url('/addequipments/add') }}" style="height: 50px; width:150px; margin-bottom: 20px; border-radius: 5px; font-size: 15px; text-decoration: none; color: white; background-color: green; text-align: center; padding-top: 15px; ">
-                Add Equipment
+            <p style="font-size: 25px; color: #f0f0f0;">List of Tools & Equipments</p>
+            <a href="{{ url('/addequipments/add') }}" style="height: 50px; width:200px; margin-bottom: 20px; border-radius: 5px; font-size: 15px; text-decoration: none; color: white; background-color: green; text-align: center; padding-top: 15px; ">
+                Add Tools / Equipment
             </a>
         </div>
 

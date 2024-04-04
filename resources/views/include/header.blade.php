@@ -10,6 +10,8 @@
                 Tools & Equipments
             @elseif(request()->routeIs('addequipments') || request()->is('addequipments/add') || request()->routeIs('editequipments.edit'))
                 Add Tools & Equipments
+            @elseif(request()->routeIs('loghistory'))
+                Log History
             @elseif(request()->routeIs('manageusers') || request()->routeIs('editusers') || request()->routeIs('createusers'))
                 Manage Users
             @else

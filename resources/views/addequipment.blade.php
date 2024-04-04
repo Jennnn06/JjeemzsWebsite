@@ -304,7 +304,7 @@
             </div>
 
             <!-- 2nd Div -->
-            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content:last baseline">
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; ">
 
                 <!-- Equipment brand -->
                 <div class="mb-3" style="position: relative">

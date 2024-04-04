@@ -16,9 +16,23 @@
 
         var isStatusGood;
         var isAvailable;
+
+        //AYUSIN UNG PROP.SHOW sa onStart, or onUpdate and HIDE NG Upload signature, quantity and date borrowed and CRUD
+        //AYUSIN SA $('#editform'), dapat no value ung 'Upload signature, quantity and date borrowed' if di naman ayos ung status
         
         //Function to check onLoad
         function onStart(){
+            // DATE
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.toLocaleString('default', { month: 'long' });
+            var day = currentDate.getDate();
+
+            $('#selectYearDropdown').val(year);
+            $('#selectMonthDropdown').val(month);
+            $('#selectDateDropdown').val(day);
+
+            //OTHERS
             selectedStatusText = $('#equipmentsstatusvalue').find('option:selected').text();
             isStatusGood = (selectedStatusText === 'Good');
 
@@ -31,6 +45,9 @@
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').hide();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
@@ -41,6 +58,8 @@
 
                 $('#equipmentsborrowedby').show();
                 $('#equipmentslocation').show();
+
+                $('#fifthdiv').show();
 
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
@@ -54,6 +73,8 @@
                 $('#equipmentsavailable').hide();
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
+                
+                $('#fifthdiv').hide();
 
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', true).show();
@@ -85,6 +106,9 @@
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').hide();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
@@ -102,6 +126,9 @@
                 $('#equipmentsborrowedby').show();
                 $('#equipmentslocation').show();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').show();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', true).show();
@@ -118,6 +145,8 @@
                 //Borrowed by and location
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
+
+                $('#fifthdiv').hide();
 
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', true).show();
@@ -250,7 +279,6 @@
 
         // Add 'required' attribute to equipmentsnamevalue and equipmentsqtyvalue
         $('#equipmentsnamevalue, #equipmentsqtyvalue').prop('required', true);
-
         
     });
 </script>
@@ -306,7 +334,7 @@
             </div>
             
             <!-- 2nd Div -->
-            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; justify-content:last baseline">
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; ">
                 
                 <!-- Equipment brand -->
                 <div class="mb-3" style="position: relative">
@@ -399,6 +427,69 @@
                     <input id="equipmentslocationvalue" class="form-control" name="equipmentslocation" type="text" value="{{$editequipment->LOCATION}}" placeholder="Location" style="width: 300px">
                     <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
                 </div>
+                
+            </div>
+
+            <!-- 5th Div-->
+            <div class="mb-3" id="fifthdiv" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                
+                <!-- Upload Signature -->
+                <div class="mb-3">
+                    <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0; width: 300px">Upload Signature (Optional):</label>
+                    <input class="form-control" name="uploadsignature" type="file" id="formFile" accept="image/*" style="width: 250px">
+                    @error('upload')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+
+
+                <!-- Borrowed Quantity -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Quantity: </label>
+                    <input class="form-control" name="equipmentsborrowedqty" type="number" value="{{$editequipment->QUANTITY}}" placeholder="0" style="width: 150px; margin-right: 50px">
+                </div>
+
+                <!-- Date borrowed -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; width: 250px">Date borrowed: </label>
+                    <div style="display: flex; flex-direction: row; width: 450px">
+                        {{-- SELECT MONTH --}}
+                        <select class="form-select" name="monthborrowed" aria-label="Default select example" id="selectMonthDropdown" style="margin-right: 20px">
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+
+                        {{-- SELECT DATE --}}
+                        <select class="form-select" name="dateborrowed" aria-label="Default select example" id="selectDateDropdown" style="margin-right: 20px">
+                            @for ($day = 1; $day <= 31; $day++)
+                                <option value="{{ $day }}">{{ $day }}</option>
+                            @endfor
+                        </select>
+
+                        {{-- SELECT YEAR --}}
+                        <select class="form-select" name="yearborrowed" aria-label="Default select example" id="selectYearDropdown" >
+                            @for ($year = 2020; $year <= 2050; $year++)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    
+                </div>
+
+                
+
             </div>
 
             <!-- Note -->
