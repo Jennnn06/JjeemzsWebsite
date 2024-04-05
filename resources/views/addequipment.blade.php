@@ -19,6 +19,21 @@
         
         //Function to check onLoad
         function onStart(){
+            // DATE
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.toLocaleString('default', { month: 'long' });
+            var day = currentDate.getDate();
+
+            $('#yearborrowedid').val(year);
+            $('#monthborrowedid').val(month);
+            $('#dateborrowedid').val(day);
+
+            $('#yearreturnedid').val(year);
+            $('#monthreturnedid').val(month);
+            $('#datereturnedid').val(day);
+
+            //OTHERS
             selectedStatusText = $('#equipmentsstatusvalue').find('option:selected').text();
             isStatusGood = (selectedStatusText === 'Good');
 
@@ -31,6 +46,9 @@
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').hide();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
@@ -41,6 +59,8 @@
 
                 $('#equipmentsborrowedby').show();
                 $('#equipmentslocation').show();
+
+                $('#fifthdiv').show();
 
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
@@ -54,6 +74,8 @@
                 $('#equipmentsavailable').hide();
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
+
+                $('#fifthdiv').hide();
 
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', true).show();
@@ -85,10 +107,14 @@
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').hide();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
             }
             else if(isStatusGood && !isAvailable){
                 //Reason
@@ -102,10 +128,14 @@
                 $('#equipmentsborrowedby').show();
                 $('#equipmentslocation').show();
 
+                //Upload signature, quantity and date borrowed
+                $('#fifthdiv').show();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', true).show();
                 $('#equipmentslocationvalue').prop('required', true).show();
+                $('#equipmentsborrowedqtyvalue').prop('required', true).show();
             }
             else if(!isStatusGood){
                 //Reason
@@ -119,10 +149,13 @@
                 $('#equipmentsborrowedby').hide();
                 $('#equipmentslocation').hide();
 
+                $('#fifthdiv').hide();
+
                 //Requirements
                 $('#equipmentsreasonvalue').prop('required', true).show();
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
             }
         }
 
@@ -142,6 +175,11 @@
 
                 $('#equipmentsborrowedbyvalue').val('');
                 $('#equipmentslocationvalue').val('');
+
+                $('#equipmentsborrowedqtyvalue').val('');
+                $('#monthborrowedid').val('');
+                $('#dateborrowedid').val('');
+                $('#yearborrowedid').val('');
             }
             else if (isStatusGood && !isAvailable){
                 $('#equipmentsreasonvalue').val('');
@@ -150,6 +188,11 @@
                 $('#equipmentsavailablevalue').val('No');
                 $('#equipmentsborrowedbyvalue').val('');
                 $('#equipmentslocationvalue').val('');
+                
+                $('#equipmentsborrowedqtyvalue').val('');
+                $('#monthborrowedid').val('');
+                $('#dateborrowedid').val('');
+                $('#yearborrowedid').val('');
             }
 
         });
@@ -390,6 +433,65 @@
                     <input id="equipmentslocationvalue" class="form-control" name="equipmentslocation" type="text" placeholder="Location" style="width: 300px">
                     <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
                 </div>
+            </div>
+
+            <!-- 5th Div FOR BORROWING-->
+            <div class="mb-3" id="fifthdiv" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                
+                <!-- Upload Signature -->
+                <div class="mb-3">
+                    <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0; width: 300px">Upload Signature (Optional):</label>
+                    <input id="uploadsignaturevalue" class="form-control" name="uploadsignature" type="file" id="formFile" accept="image/*" style="width: 250px">
+                    @error('upload')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+
+                <!-- Borrowed Quantity -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Quantity: </label>
+                    <input id="equipmentsborrowedqtyvalue" class="form-control" name="equipmentsborrowedqty" type="number" placeholder="0" style="width: 150px; margin-right: 50px">
+                </div>
+
+                <!-- Date borrowed -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; width: 250px">Date borrowed: </label>
+                    <div style="display: flex; flex-direction: row; width: 450px">
+                        {{-- SELECT MONTH --}}
+                        <select id="monthborrowedid" class="form-select" name="monthborrowed" aria-label="Default select example" style="margin-right: 20px">
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+
+                        {{-- SELECT DATE --}}
+                        <select id="dateborrowedid" class="form-select" name="dateborrowed" aria-label="Default select example" style="margin-right: 20px">
+                            @for ($day = 1; $day <= 31; $day++)
+                                <option value="{{ $day }}">{{ $day }}</option>
+                            @endfor
+                        </select>
+
+                        {{-- SELECT YEAR --}}
+                        <select id="yearborrowedid" class="form-select" name="yearborrowed" aria-label="Default select example"  >
+                            @for ($year = 2020; $year <= 2050; $year++)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    
+                </div>
+
             </div>
 
             <!-- Note -->

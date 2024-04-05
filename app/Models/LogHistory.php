@@ -12,6 +12,7 @@ class LogHistory extends Model
     protected $table = 'log_history';
     
     protected $fillable = [
+        'equipment_id',
         'ITEM',
         'BRAND',
         'QUANTITY',

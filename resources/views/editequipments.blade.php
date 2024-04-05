@@ -16,9 +16,6 @@
 
         var isStatusGood;
         var isAvailable;
-
-        //AYUSIN UNG PROP.SHOW sa onStart, or onUpdate and HIDE NG Upload signature, quantity and date borrowed and CRUD
-        //AYUSIN SA $('#editform'), dapat no value ung 'Upload signature, quantity and date borrowed' if di naman ayos ung status
         
         //Function to check onLoad
         function onStart(){
@@ -28,9 +25,13 @@
             var month = currentDate.toLocaleString('default', { month: 'long' });
             var day = currentDate.getDate();
 
-            $('#selectYearDropdown').val(year);
-            $('#selectMonthDropdown').val(month);
-            $('#selectDateDropdown').val(day);
+            $('#yearborrowedid').val(year);
+            $('#monthborrowedid').val(month);
+            $('#dateborrowedid').val(day);
+
+            $('#yearreturnedid').val(year);
+            $('#monthreturnedid').val(month);
+            $('#datereturnedid').val(day);
 
             //OTHERS
             selectedStatusText = $('#equipmentsstatusvalue').find('option:selected').text();
@@ -39,6 +40,9 @@
             selectedAvailableText = $('#equipmentsavailablevalue').find('option:selected').text();
             isAvailable = (selectedAvailableText === 'Yes');
 
+            var isBorrowed = {!! json_encode($isBorrowed) !!};
+
+            //CHECK
             if(isStatusGood && isAvailable){
                 $('#equipmentsreason').hide();
 
@@ -52,6 +56,13 @@
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
+
+                //RETURNED
+                $('#uploadsignaturereturneeID').hide();
+                $('#sixthdiv').hide();
+
+                $('#equipmentsreturnedbyvalue').prop('required', false);
             }
             else if(isStatusGood && !isAvailable){
                 $('#equipmentsreason').hide();
@@ -65,6 +76,13 @@
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', true).show();
                 $('#equipmentslocationvalue').prop('required', true).show();
+                $('#equipmentsborrowedqtyvalue').prop('required', true).show();
+
+                //RETURNED
+                $('#uploadsignaturereturneeID').hide();
+                $('#sixthdiv').hide();
+
+                $('#equipmentsreturnedbyvalue').prop('required', false);
             }
             else if(!isStatusGood){
                 $('#equipmentsreason').show();
@@ -80,6 +98,21 @@
                 $('#equipmentsreasonvalue').prop('required', true).show();
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
+
+                //RETURNED
+                $('#uploadsignaturereturneeID').hide();
+                $('#sixthdiv').hide();
+
+                $('#equipmentsreturnedbyvalue').prop('required', false);
+            }
+
+            //ISBORROWED
+            if(isStatusGood && isAvailable && isBorrowed){
+                $('#uploadsignaturereturneeID').show();
+                $('#sixthdiv').show();
+
+                $('#equipmentsreturnedbyvalue').prop('required', true).show();
             }
             
         }
@@ -94,6 +127,8 @@
             selectedAvailableText = $('#equipmentsavailablevalue').find('option:selected').text();
             isAvailable = (selectedAvailableText === 'Yes');
 
+            var isBorrowed = {!! json_encode($isBorrowed) !!};
+
             if(isStatusGood && isAvailable){
                 //Reason
                 $('#equipmentsreason').hide();
@@ -113,6 +148,13 @@
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
+
+                //RETURNED
+                $('#uploadsignaturereturneeID').hide();
+                $('#sixthdiv').hide();
+
+                $('#equipmentsreturnedbyvalue').prop('required', false);
             }
             else if(isStatusGood && !isAvailable){
                 //Reason
@@ -133,6 +175,13 @@
                 $('#equipmentsreasonvalue').prop('required', false);
                 $('#equipmentsborrowedbyvalue').prop('required', true).show();
                 $('#equipmentslocationvalue').prop('required', true).show();
+                $('#equipmentsborrowedqtyvalue').prop('required', true).show();
+
+                //RETURNED
+                $('#uploadsignaturereturneeID').hide();
+                $('#sixthdiv').hide();
+
+                $('#equipmentsreturnedbyvalue').prop('required', false);
             }
             else if(!isStatusGood){
                 //Reason
@@ -152,7 +201,17 @@
                 $('#equipmentsreasonvalue').prop('required', true).show();
                 $('#equipmentsborrowedbyvalue').prop('required', false);
                 $('#equipmentslocationvalue').prop('required', false);
+                $('#equipmentsborrowedqtyvalue').prop('required', false);
             }
+            
+            //ISBORROWED
+            if(isStatusGood && isAvailable && isBorrowed){
+                $('#uploadsignaturereturneeID').show();
+                $('#sixthdiv').show();
+
+                $('#equipmentsreturnedbyvalue').prop('required', true).show();
+            }
+
         }
 
         // Continuously update visibility when equipment status changes
@@ -171,6 +230,11 @@
 
                 $('#equipmentsborrowedbyvalue').val('');
                 $('#equipmentslocationvalue').val('');
+
+                $('#equipmentsborrowedqtyvalue').val('');
+                $('#monthborrowedid').val('');
+                $('#dateborrowedid').val('');
+                $('#yearborrowedid').val('');
             }
             else if (isStatusGood && !isAvailable){
                 $('#equipmentsreasonvalue').val('');
@@ -179,6 +243,11 @@
                 $('#equipmentsavailablevalue').val('No');
                 $('#equipmentsborrowedbyvalue').val('');
                 $('#equipmentslocationvalue').val('');
+
+                $('#equipmentsborrowedqtyvalue').val('');
+                $('#monthborrowedid').val('');
+                $('#dateborrowedid').val('');
+                $('#yearborrowedid').val('');
             }
 
         });
@@ -427,16 +496,12 @@
                     <input id="equipmentslocationvalue" class="form-control" name="equipmentslocation" type="text" value="{{$editequipment->LOCATION}}" placeholder="Location" style="width: 300px">
                     <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
                 </div>
-                
-            </div>
 
-            <!-- 5th Div-->
-            <div class="mb-3" id="fifthdiv" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
-                
+                <!------------ FOR RETURNING -------------->
                 <!-- Upload Signature -->
-                <div class="mb-3">
+                <div class="mb-3" id="uploadsignaturereturneeID">
                     <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0; width: 300px">Upload Signature (Optional):</label>
-                    <input class="form-control" name="uploadsignature" type="file" id="formFile" accept="image/*" style="width: 250px">
+                    <input id="uploadsignaturereturneevalue" class="form-control" name="uploadsignaturereturnee" type="file" id="formFile" accept="image/*" style="width: 250px">
                     @error('upload')
                     <div class="invalid-feedback" style="display: block;">
                         {{ $message }}
@@ -444,11 +509,26 @@
                     @enderror
                 </div>
 
+            </div>
+
+            <!-- 5th Div FOR BORROWING-->
+            <div class="mb-3" id="fifthdiv" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                
+                <!-- Upload Signature -->
+                <div class="mb-3">
+                    <label for="formFile" class="form-label col-sm-2" style="color: #f0f0f0; width: 300px">Upload Signature (Optional):</label>
+                    <input id="uploadsignaturevalue" class="form-control" name="uploadsignature" type="file" id="formFile" accept="image/*" style="width: 250px">
+                    @error('upload')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
 
                 <!-- Borrowed Quantity -->
                 <div class="mb-3">
                     <label class="col-sm-2 form-label" style="color: #f0f0f0; ">Quantity: </label>
-                    <input class="form-control" name="equipmentsborrowedqty" type="number" value="{{$editequipment->QUANTITY}}" placeholder="0" style="width: 150px; margin-right: 50px">
+                    <input id="equipmentsborrowedqtyvalue" class="form-control" name="equipmentsborrowedqty" value="{{ $logHistoryQuantity !== null ? $logHistoryQuantity : '' }}" type="number" placeholder="0" style="width: 150px; margin-right: 50px">
                 </div>
 
                 <!-- Date borrowed -->
@@ -456,7 +536,7 @@
                     <label class="col-sm-2 form-label" style="color: #f0f0f0; width: 250px">Date borrowed: </label>
                     <div style="display: flex; flex-direction: row; width: 450px">
                         {{-- SELECT MONTH --}}
-                        <select class="form-select" name="monthborrowed" aria-label="Default select example" id="selectMonthDropdown" style="margin-right: 20px">
+                        <select id="monthborrowedid" class="form-select" name="monthborrowed" aria-label="Default select example" style="margin-right: 20px">
                             <option value="January">January</option>
                             <option value="February">February</option>
                             <option value="March">March</option>
@@ -472,14 +552,14 @@
                         </select>
 
                         {{-- SELECT DATE --}}
-                        <select class="form-select" name="dateborrowed" aria-label="Default select example" id="selectDateDropdown" style="margin-right: 20px">
+                        <select id="dateborrowedid" class="form-select" name="dateborrowed" aria-label="Default select example" style="margin-right: 20px">
                             @for ($day = 1; $day <= 31; $day++)
                                 <option value="{{ $day }}">{{ $day }}</option>
                             @endfor
                         </select>
 
                         {{-- SELECT YEAR --}}
-                        <select class="form-select" name="yearborrowed" aria-label="Default select example" id="selectYearDropdown" >
+                        <select id="yearborrowedid" class="form-select" name="yearborrowed" aria-label="Default select example"  >
                             @for ($year = 2020; $year <= 2050; $year++)
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
@@ -488,8 +568,55 @@
                     
                 </div>
 
-                
+            </div>
 
+            <!------------ FOR RETURNING -------------->
+            <!-------- 6th Div FOR RETURNING ---------->
+            <div class="mb-3" id="sixthdiv" style="display: flex; flex-direction: row; width: 1000px; justify-content: space-between">
+                <!-- Date returned -->
+                <div class="mb-3">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0; width: 250px">Date returned: </label>
+                    <div style="display: flex; flex-direction: row; width: 450px">
+                        {{-- SELECT MONTH --}}
+                        <select id="monthreturnedid" class="form-select" name="monthreturned" aria-label="Default select example" style="margin-right: 20px">
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+
+                        {{-- SELECT DATE --}}
+                        <select id="datereturnedid" class="form-select" name="datereturned" aria-label="Default select example" style="margin-right: 20px">
+                            @for ($day = 1; $day <= 31; $day++)
+                                <option value="{{ $day }}">{{ $day }}</option>
+                            @endfor
+                        </select>
+
+                        {{-- SELECT YEAR --}}
+                        <select id="yearreturnedid" class="form-select" name="yearreturned" aria-label="Default select example"  >
+                            @for ($year = 2020; $year <= 2050; $year++)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    
+                </div>
+
+                <!-- Returned by -->
+                <div class="mb-3" id="equipmentsreturnedby">
+                    <label for="exampleFormControlInput1" class="col-sm-2 form-label" style="color: #f0f0f0; width: 200px">Returned by: </label>
+                    <input id="equipmentsreturnedbyvalue" class="form-control" name="equipmentsreturnedby" type="text" value="{{$editequipment->BORROWED_BY}}" placeholder="Returned by" style="width: 300px">
+                    <span class="col-sm-2 form-text" style="color: #f0f0f0; width: 300px">Required.</span>
+                </div>
+                
             </div>
 
             <!-- Note -->

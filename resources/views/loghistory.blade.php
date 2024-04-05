@@ -49,7 +49,7 @@
         });
 
         //If nabago ung month, magbabago rin options, for example leap year
-        $('#selectMonthDropdown, #selectYearDropdown').change(function() {
+        $('#selectMonthDropdown, #selectDateDropdown, #selectYearDropdown').change(function() {
             var month = $('#selectMonthDropdown').val();
             var year = $('#selectYearDropdown').val();
             var selectDate = $('#selectDateDropdown');
@@ -86,6 +86,24 @@
             for (var i = 1; i <= daysInMonth; i++) {
                 selectDate.append('<option value="' + i + '">' + i + '</option>');
             }
+
+            // // Perform an AJAX request to fetch data based on the selected date
+            // $.ajax({
+            //     url: '/loghistory', // Update the URL as per your Laravel route
+            //     method: 'GET',
+            //     data: {
+            //         year: year,
+            //         month: month,
+            //         day: $('#selectDateDropdown').val()
+            //     },
+            //     success: function(response) {
+            //         // Update the table with the fetched data
+            //         $('#borrowedTodayID').html(response);
+            //     },
+            //     error: function(xhr, status, error) {
+            //         console.error(error);
+            //     }
+            // });
             
         });
 
@@ -122,7 +140,7 @@
                 
                 <div class="selectDate" style="width: 550px; display: flex; flex-direction: row; ">
                     {{-- SELECT MONTH --}}
-                    <select class="form-select" aria-label="Default select example" id="selectMonthDropdown" style="margin-right: 50px">
+                    <select name="monthselect" class="form-select" aria-label="Default select example" id="selectMonthDropdown" style="margin-right: 50px">
                         <option value="January">January</option>
                         <option value="February">February</option>
                         <option value="March">March</option>
@@ -138,14 +156,14 @@
                     </select>
 
                     {{-- SELECT DATE --}}
-                    <select class="form-select" aria-label="Default select example" id="selectDateDropdown" style="margin-right: 50px">
+                    <select name="dateselect" class="form-select" aria-label="Default select example" id="selectDateDropdown" style="margin-right: 50px">
                         @for ($day = 1; $day <= 31; $day++)
                             <option value="{{ $day }}">{{ $day }}</option>
                         @endfor
                     </select>
 
                     {{-- SELECT YEAR --}}
-                    <select class="form-select" aria-label="Default select example" id="selectYearDropdown" >
+                    <select name="yearselect" class="form-select" aria-label="Default select example" id="selectYearDropdown" >
                         @for ($year = 2020; $year <= 2050; $year++)
                             <option value="{{ $year }}">{{ $year }}</option>
                         @endfor
@@ -165,7 +183,7 @@
         <div id="dateTable" class="borrowedAndReturnedToday" style="display:flex; flex-direction: row; justify-content: space-between; margin-top: 30px;">
 
             <!-- Borrowed Today -->
-            <div class="borrowedToday" style="width: 700px; font-size: 70%; margin-right: 50px">
+            <div id="borrowedTodayID" class="borrowedToday" style="width: 700px; font-size: 70%; margin-right: 50px">
                 <p style="font-size: 25px; color: #f0f0f0;">Borrowed Today</p>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -180,19 +198,29 @@
                         <th style="border-top-right-radius: 5px;">SIGNATURE</th>
                     </thead>
                     <tbody class="table-group-divider">
-                        @for ($i = 0; $i < 10; $i++)
+                        @foreach($borrowedToday as $borrowed)
                         <tr style="height: 30px">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                @if($borrowed->image)
+                                <img src="{{ asset($borrowed->image) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @else
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @endif
+                            </td>
+                            <td>{{$borrowed->ITEM}}</td>
+                            <td>{{$borrowed->BRAND}}</td>
+                            <td>{{$borrowed->color}}</td>
+                            <td>{{$borrowed->QUANTITY}}</td>
+                            <td>{{$borrowed->LOCATION}}</td>
+                            <td>{{$borrowed->DATE_BORROWED}}</td>
+                            <td>{{$borrowed->BORROWER}}</td>
+                            <td>
+                                @if($borrowed->BORROWER_SIGNATURE)
+                                <img src="{{ asset($borrowed->BORROWER_SIGNATURE) }}" alt="borrower signature" style="width: 60px; height: 30px;" loading="lazy">
+                                @endif
+                            </td>
                         </tr>
-                        @endfor
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -213,7 +241,6 @@
                         <th style="border-top-right-radius: 5px;">SIGNATURE</th>
                     </thead>
                     <tbody class="table-group-divider">
-                        @for ($i = 0; $i < 10; $i++)
                         <tr style="height: 30px">
                             <td></td>
                             <td></td>
@@ -225,7 +252,6 @@
                             <td></td>
                             <td></td>
                         </tr>
-                        @endfor
                     </tbody>
                 </table>
             </div>

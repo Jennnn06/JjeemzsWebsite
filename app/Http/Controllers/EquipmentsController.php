@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\EquipmentsFolder;
 use App\Models\Equipments;
+use App\Models\LogHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -16,7 +17,7 @@ class EquipmentsController extends Controller
         //Update the time active
         $user = Auth::user();
 
-        // Update TIME_ACTIVE to current time in 12-hour format
+        // Update TIME_ACTIVE IN DASHBOARD to current time in 12-hour format
         User::where('id', $user->id)->update(['TIME_ACTIVE' => Carbon::now()->format('m-d-Y h:i A')]);
 
         User::where('id', $user->id)->update(['ACTIVE_LOCATION' => 'Add Tools & Equipments']);
@@ -118,7 +119,12 @@ class EquipmentsController extends Controller
             'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
             'equipmentsnote' => ['nullable'],
-            'equipmentsfolder' => ['nullable']
+            'equipmentsfolder' => ['nullable'],
+
+            'equipmentsborrowedqty' => ['required', 'numeric', 'min:1'],
+            'monthborrowed' => ['nullable'],
+            'dateborrowed' => ['nullable'],
+            'yearborrowed' => ['nullable']
         ]);
         
         $dataFromTable=[
@@ -158,7 +164,49 @@ class EquipmentsController extends Controller
             echo "No image uploaded";
         }
 
-        Equipments::create($dataFromTable);
+        $equipment = Equipments::create($dataFromTable);
+
+        // Then create the log history entry
+        $logHistoryData = [
+            'equipment_id' => $equipment->id, // Use the ID of the created equipment
+            'ITEM' => $data['equipmentsname'],
+            'BRAND' => $data['equipmentsbrand'],
+            'QUANTITY' => $data['equipmentsborrowedqty'],
+            'LOCATION' => $data['equipmentslocation'],
+            'DATE_BORROWED' => $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'],
+            'BORROWER' => $data['equipmentsborrowedby'],
+            
+            'ITEM_IMAGE' => $equipment->ITEM_IMAGE,
+            'COLOR' => $data['equipmentscolor'],
+            //Add ITEM CODE
+        ];
+
+        $logHistory = new LogHistory();
+        $logHistory->fill($logHistoryData);
+
+        if ($request->hasFile('uploadsignature')) {
+            $file = $request->file('uploadsignature');
+            $destinationPath = public_path('assets/borrower_signatures');
+            
+            $fileName = $file->getClientOriginalName();
+            
+            if ($file->move($destinationPath, $fileName)) {
+                // If file upload is successful, update the signature path
+                $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
+                
+                // Delete the existing signature if it exists
+                if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
+                    unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
+                }
+                
+                echo "Signature Upload Success";
+            } else {
+                // If file upload fails, handle the error
+                echo "Failed to upload signature";
+            }
+        }
+
+        $logHistory->save();
 
         return redirect(route('addequipments'));
     }
@@ -167,6 +215,24 @@ class EquipmentsController extends Controller
         $editequipment = Equipments::findOrFail($id);
         $equipmentsfolder = EquipmentsFolder::all();
 
+        $isBorrowed = !is_null($editequipment->BORROWED_BY);
+
+        // Retrieve logHistory quantity
+        $logHistory = LogHistory::where('equipment_id', $id)
+        ->where(function ($query) {
+            $query->whereNull('DATE_RETURNED')
+                ->orWhereNull('RETURNEE');
+        })
+        ->first();
+
+        if (!$logHistory) {
+            // If logHistory doesn't exist, set quantity to null
+            $logHistoryQuantity = null;
+        } else {
+            $logHistoryQuantity = $logHistory->QUANTITY;
+        }
+
+        //Suggestions
         if ($request->has('query')) {
             $query = $request->input('query');
             
@@ -194,7 +260,7 @@ class EquipmentsController extends Controller
         // Store the previous URL in the session
         Session::put('previous_url_equipments', url()->previous());
 
-        return view('editequipments', compact('editequipment', 'equipmentsfolder'));
+        return view('editequipments', compact('editequipment', 'equipmentsfolder', 'logHistoryQuantity', 'isBorrowed'));
     }
 
     public function update(Request $request, $id){
@@ -210,7 +276,12 @@ class EquipmentsController extends Controller
             'equipmentslocation' => ['nullable'],
             'equipmentsreason' => ['nullable'],
             'equipmentsnote' => ['nullable'],
-            'equipmentsfolder' => ['nullable']
+            'equipmentsfolder' => ['nullable'],
+
+            'equipmentsborrowedqty' => ['required', 'numeric', 'min:1'],
+            'monthborrowed' => ['nullable'],
+            'dateborrowed' => ['nullable'],
+            'yearborrowed' => ['nullable']
         ]);
     
         $equipment = Equipments::findOrFail($id);
@@ -254,6 +325,67 @@ class EquipmentsController extends Controller
     
         // Save the changes to the equipment
         $equipment->save();
+
+        //LOG HISTORY
+        $logHistory = LogHistory::where('equipment_id', $id)
+        ->where(function ($query) {
+            $query->whereNull('DATE_RETURNED')
+                ->orWhereNull('RETURNEE');
+        })
+        ->first();
+
+        if ($logHistory) {
+            // Update the existing row in log_history
+            $logHistory->ITEM = $data['equipmentsname'];
+            $logHistory->BRAND = $data['equipmentsbrand'];
+            $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
+            $logHistory->LOCATION = $data['equipmentslocation'];
+            $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
+            $logHistory->BORROWER = $data['equipmentsborrowedby'];
+
+            $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
+            $logHistory->COLOR = $data['equipmentscolor'];
+            //Add ITEM CODE
+    
+        } else {
+            // Create a new row in log_history
+            $logHistory = new LogHistory();
+            $logHistory->equipment_id = $id;
+            $logHistory->ITEM = $data['equipmentsname'];
+            $logHistory->BRAND = $data['equipmentsbrand'];
+            $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
+            $logHistory->LOCATION = $data['equipmentslocation'];
+            $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
+            $logHistory->BORROWER = $data['equipmentsborrowedby'];
+
+            $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
+            $logHistory->COLOR = $data['equipmentscolor'];
+            //Add ITEM CODE
+        }
+
+        if ($request->hasFile('uploadsignature')) {
+            $file = $request->file('uploadsignature');
+            $destinationPath = public_path('assets/borrower_signatures');
+            
+            $fileName = $file->getClientOriginalName();
+            
+            if ($file->move($destinationPath, $fileName)) {
+                // If file upload is successful, update the signature path
+                $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
+                
+                // Delete the existing signature if it exists
+                if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
+                    unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
+                }
+                
+                echo "Signature Upload Success";
+            } else {
+                // If file upload fails, handle the error
+                echo "Failed to upload signature";
+            }
+        }
+
+        $logHistory->save();
     
         return redirect()->to(session('previous_url_equipments'));
     }   
