@@ -30,6 +30,9 @@
 
         //FIX
         function populateDaysDropdown(){
+            var month = $('#selectMonthDropdown').val();
+            var year = $('#selectYearDropdown').val();
+            var selectDate = $('#selectDateDropdown').val();
             //DAY
             var daysInMonth;
             var selectDate = $('#selectDateDropdown');
@@ -88,6 +91,8 @@
             var month = $('#selectMonthDropdown').val();
             var year = $('#selectYearDropdown').val();
             var selectDate = $('#selectDateDropdown').val();
+
+            populateDaysDropdown();
 
             $.ajax({
                 url: '{{ route('loghistory') }}',
