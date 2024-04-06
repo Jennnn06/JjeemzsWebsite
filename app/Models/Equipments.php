@@ -13,6 +13,7 @@ class Equipments extends Model
     protected $table = 'equipments';
 
     protected $fillable = [
+        'ITEM_CODE',
         'ITEM_SERIAL_NUMBER',
         'ITEM_IMAGE',
         'ITEM_NAME',

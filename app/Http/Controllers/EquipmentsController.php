@@ -59,7 +59,6 @@ class EquipmentsController extends Controller
 
         $equipments = $query->get();
         
-
         // Check if the request is AJAX
         if ($request->ajax()) {
             // If it's an AJAX request, return a partial view for the table
@@ -121,7 +120,9 @@ class EquipmentsController extends Controller
             'equipmentsnote' => ['nullable'],
             'equipmentsfolder' => ['nullable'],
 
-            'equipmentsborrowedqty' => ['required', 'numeric', 'min:1'],
+            'equipmentscode' => ['nullable'],
+
+            'equipmentsborrowedqty' => ['nullable', 'numeric'],
             'monthborrowed' => ['nullable'],
             'dateborrowed' => ['nullable'],
             'yearborrowed' => ['nullable']
@@ -140,6 +141,7 @@ class EquipmentsController extends Controller
             'REASON' => $data['equipmentsreason'],
             'NOTE' => $data['equipmentsnote'],
             'FOLDER' => $data['equipmentsfolder'],
+            'ITEM_CODE' => $data['equipmentscode'],
         ];
 
         // If an image is uploaded
@@ -166,47 +168,58 @@ class EquipmentsController extends Controller
 
         $equipment = Equipments::create($dataFromTable);
 
-        // Then create the log history entry
-        $logHistoryData = [
-            'equipment_id' => $equipment->id, // Use the ID of the created equipment
-            'ITEM' => $data['equipmentsname'],
-            'BRAND' => $data['equipmentsbrand'],
-            'QUANTITY' => $data['equipmentsborrowedqty'],
-            'LOCATION' => $data['equipmentslocation'],
-            'DATE_BORROWED' => $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'],
-            'BORROWER' => $data['equipmentsborrowedby'],
-            
-            'ITEM_IMAGE' => $equipment->ITEM_IMAGE,
-            'COLOR' => $data['equipmentscolor'],
-            //Add ITEM CODE
-        ];
+        if ($data['equipmentsavailable'] === 'No') {
+            $logHistoryData = [
+                'equipment_id' => $equipment->id,
 
-        $logHistory = new LogHistory();
-        $logHistory->fill($logHistoryData);
+                //Does not work
+                'ITEM_IMAGE' => $equipment->ITEM_IMAGE,
+                'ITEM_CODE' => $data['equipmentscode'],
+                'COLOR' => $data['equipmentscolor'],
 
-        if ($request->hasFile('uploadsignature')) {
-            $file = $request->file('uploadsignature');
-            $destinationPath = public_path('assets/borrower_signatures');
-            
-            $fileName = $file->getClientOriginalName();
-            
-            if ($file->move($destinationPath, $fileName)) {
-                // If file upload is successful, update the signature path
-                $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
+                'ITEM' => $data['equipmentsname'],
+                'BRAND' => $data['equipmentsbrand'],
+                'QUANTITY' => $data['equipmentsborrowedqty'],
+                'LOCATION' => $data['equipmentslocation'],
+                'DATE_BORROWED' => isset($data['monthborrowed']) && isset($data['dateborrowed']) && isset($data['yearborrowed']) ? 
+                    $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'] : null,
+                'BORROWER' => $data['equipmentsborrowedby'],
                 
-                // Delete the existing signature if it exists
-                if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
-                    unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
-                }
-                
-                echo "Signature Upload Success";
-            } else {
-                // If file upload fails, handle the error
-                echo "Failed to upload signature";
-            }
+            ];
+        } else {
+            // If equipmentsavailable is not "No", set $logHistoryData to null or an empty array, depending on your preference
+            $logHistoryData = null;
         }
 
-        $logHistory->save();
+        if ($logHistoryData !== null) {
+            $logHistory = new LogHistory();
+            $logHistory->fill($logHistoryData);
+
+            //Signature returnee pic
+            if ($request->hasFile('uploadsignature')) {
+                $file = $request->file('uploadsignature');
+                $destinationPath = public_path('assets/borrower_signatures');
+                
+                $fileName = $file->getClientOriginalName();
+                
+                if ($file->move($destinationPath, $fileName)) {
+                    // If file upload is successful, update the signature path
+                    $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
+                    
+                    // Delete the existing signature if it exists
+                    if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
+                        unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
+                    }
+                    
+                    echo "Signature Upload Success";
+                } else {
+                    // If file upload fails, handle the error
+                    echo "Failed to upload signature";
+                }
+            }
+
+            $logHistory->save();
+        }
 
         return redirect(route('addequipments'));
     }
@@ -277,11 +290,20 @@ class EquipmentsController extends Controller
             'equipmentsreason' => ['nullable'],
             'equipmentsnote' => ['nullable'],
             'equipmentsfolder' => ['nullable'],
+            'equipmentscode' => ['nullable'],
 
-            'equipmentsborrowedqty' => ['required', 'numeric', 'min:1'],
+            'equipmentsborrowedqty' => ['nullable', 'numeric'],
             'monthborrowed' => ['nullable'],
             'dateborrowed' => ['nullable'],
-            'yearborrowed' => ['nullable']
+            'yearborrowed' => ['nullable'],
+            
+            //RETURNEE
+            'monthreturned' => ['nullable'],
+            'datereturned' => ['nullable'],
+            'yearreturned' => ['nullable'],
+            
+            'equipmentsreturnedby' => ['nullable'],
+            
         ]);
     
         $equipment = Equipments::findOrFail($id);
@@ -299,6 +321,7 @@ class EquipmentsController extends Controller
         $equipment->REASON = $data['equipmentsreason'];
         $equipment->NOTE = $data['equipmentsnote'];
         $equipment->FOLDER = $data['equipmentsfolder'];
+        $equipment->ITEM_CODE = $data['equipmentscode'];
     
         // If an image is uploaded
         if ($request->hasFile('upload')) {
@@ -334,58 +357,123 @@ class EquipmentsController extends Controller
         })
         ->first();
 
-        if ($logHistory) {
-            // Update the existing row in log_history
-            $logHistory->ITEM = $data['equipmentsname'];
-            $logHistory->BRAND = $data['equipmentsbrand'];
-            $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
-            $logHistory->LOCATION = $data['equipmentslocation'];
-            $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
-            $logHistory->BORROWER = $data['equipmentsborrowedby'];
-
-            $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
-            $logHistory->COLOR = $data['equipmentscolor'];
-            //Add ITEM CODE
+        //Add only log history if good ung equipment
+        if($data['equipmentsstatus'] === 'Good'){
+            if ($logHistory && $data['equipmentsavailable'] === 'No') {
+                // Update the existing row in log_history
+                $logHistory->ITEM = $data['equipmentsname'];
+                $logHistory->BRAND = $data['equipmentsbrand'];
+                $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
+                $logHistory->LOCATION = $data['equipmentslocation'];
+                $logHistory->BORROWER = $data['equipmentsborrowedby'];
     
-        } else {
-            // Create a new row in log_history
-            $logHistory = new LogHistory();
-            $logHistory->equipment_id = $id;
-            $logHistory->ITEM = $data['equipmentsname'];
-            $logHistory->BRAND = $data['equipmentsbrand'];
-            $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
-            $logHistory->LOCATION = $data['equipmentslocation'];
-            $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
-            $logHistory->BORROWER = $data['equipmentsborrowedby'];
-
-            $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
-            $logHistory->COLOR = $data['equipmentscolor'];
-            //Add ITEM CODE
-        }
-
-        if ($request->hasFile('uploadsignature')) {
-            $file = $request->file('uploadsignature');
-            $destinationPath = public_path('assets/borrower_signatures');
-            
-            $fileName = $file->getClientOriginalName();
-            
-            if ($file->move($destinationPath, $fileName)) {
-                // If file upload is successful, update the signature path
-                $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
-                
-                // Delete the existing signature if it exists
-                if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
-                    unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
+                $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
+                $logHistory->COLOR = $data['equipmentscolor'];
+                $logHistory->ITEM_CODE = $data['equipmentscode'];
+    
+                // Check if date borrowed fields are set and assign them
+                if (isset($data['monthborrowed']) && isset($data['dateborrowed']) && isset($data['yearborrowed'])) {
+                    $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
                 }
+        
+            } 
+            else if($logHistory && $data['equipmentsavailable'] === 'Yes'){
+                // Update the existing row in log_history
+                $logHistory->ITEM = $data['equipmentsname'];
+                $logHistory->BRAND = $data['equipmentsbrand'];
+                // $logHistory->QUANTITY = $data['equipmentsborrowedqty'];
+                // $logHistory->LOCATION = $data['equipmentslocation'];
+                // $logHistory->BORROWER = $data['equipmentsborrowedby'];
+    
+                $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
+                $logHistory->COLOR = $data['equipmentscolor'];
+                $logHistory->ITEM_CODE = $data['equipmentscode'];
+    
+                //RETURN
+                // Check if date returned fields are set and assign them
+                if (isset($data['monthreturned']) && isset($data['datereturned']) && isset($data['yearreturned'])) {
+                    $logHistory->DATE_RETURNED = $data['monthreturned'] . ' ' . $data['datereturned'] . ', ' . $data['yearreturned'];
+                    $logHistory->RETURNEE = $data['equipmentsreturnedby'];
+                }
+            }
+            else if(!$logHistory && $data['equipmentsavailable'] === 'Yes'){
+                echo "No existing log, will not store any log";
+            }
+            else {
+                // Create a new row in log_history
+                $logHistory = new LogHistory();
+                $logHistory->equipment_id = $id;
+                $logHistory->ITEM = $data['equipmentsname'];
+                $logHistory->BRAND = $data['equipmentsbrand'];
+                $logHistory->LOCATION = $data['equipmentslocation'];
+    
+                $logHistory->ITEM_IMAGE = $equipment->ITEM_IMAGE;
+                $logHistory->COLOR = $data['equipmentscolor'];
+                $logHistory->ITEM_CODE = $data['equipmentscode'];
+    
+                $logHistory->QUANTITY = isset($data['equipmentsborrowedqty']) ? $data['equipmentsborrowedqty'] : 1; 
+    
+                if (isset($data['monthborrowed']) && isset($data['dateborrowed']) && isset($data['yearborrowed'])) {
+                    $logHistory->DATE_BORROWED = $data['monthborrowed'] . ' ' . $data['dateborrowed'] . ', ' . $data['yearborrowed'];
+                    $logHistory->BORROWER = $data['equipmentsborrowedby'];
+                }    
+                $logHistory->save();
+            }
+    
+            if ($request->hasFile('uploadsignature')) {
+                $file = $request->file('uploadsignature');
+                $destinationPath = public_path('assets/borrower_signatures');
                 
-                echo "Signature Upload Success";
-            } else {
-                // If file upload fails, handle the error
-                echo "Failed to upload signature";
+                $fileName = $file->getClientOriginalName();
+                
+                if ($file->move($destinationPath, $fileName)) {
+                    // If file upload is successful, update the signature path
+                    $logHistory->BORROWER_SIGNATURE = 'assets/borrower_signatures/' . $fileName;
+                    
+                    // Delete the existing signature if it exists
+                    if (File::exists($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE)) {
+                        unlink($destinationPath . '/' . $logHistory->BORROWER_SIGNATURE);
+                    }
+                    
+                    echo "Signature Upload Success";
+                } else {
+                    // If file upload fails, handle the error
+                    echo "Failed to upload signature";
+                }
+            }
+    
+            if ($request->hasFile('uploadsignaturereturnee')) {
+                $file = $request->file('uploadsignaturereturnee');
+                $destinationPath = public_path('assets/returnee_signatures');
+            
+                $fileName = $file->getClientOriginalName();
+            
+                if ($file->move($destinationPath, $fileName)) {
+                    // If file upload is successful, update the returnee's signature path
+                    $logHistory->RETURNEE_SIGNATURE = 'assets/returnee_signatures/' . $fileName;
+            
+                    // Delete the existing signature if it exists
+                    if (File::exists($destinationPath . '/' . $logHistory->RETURNEE_SIGNATURE)) {
+                        unlink($destinationPath . '/' . $logHistory->RETURNEE_SIGNATURE);
+                    }
+            
+                    echo "Returnee's Signature Upload Success";
+                } else {
+                    // If file upload fails, handle the error
+                    echo "Failed to upload returnee's signature";
+                }
+            }
+            
+            if ($logHistory) {
+                $logHistory->save();
+            } 
+            else {
+                // Handle the case where $logHistory is null
+                echo "Failed to save log history";
             }
         }
 
-        $logHistory->save();
+        
     
         return redirect()->to(session('previous_url_equipments'));
     }   

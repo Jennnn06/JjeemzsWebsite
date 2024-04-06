@@ -23,40 +23,16 @@
 
             $('#equipmentDiv').hide();
             $('#equipmentTable').hide();
+  
         }
 
         onStart();
 
-        $('#equipmentdateSelector').change(function(){
-
-            var EquipmentorDate = $('#equipmentdateSelector').val();
-
-            if(EquipmentorDate === 'Date'){
-                $('#dateDiv').show();
-                $('#dateTable').show();
-
-                $('#equipmentDiv').hide();
-                $('#equipmentTable').hide();
-            }
-            else if(EquipmentorDate === 'Equipment'){
-                $('#dateDiv').hide();
-                $('#dateTable').hide();
-
-                $('#equipmentDiv').show();
-                $('#equipmentTable').show();
-            }
-
-        });
-
-        //If nabago ung month, magbabago rin options, for example leap year
-        $('#selectMonthDropdown, #selectDateDropdown, #selectYearDropdown').change(function() {
-            var month = $('#selectMonthDropdown').val();
-            var year = $('#selectYearDropdown').val();
-            var selectDate = $('#selectDateDropdown');
-            selectDate.empty();
-
+        //FIX
+        function populateDaysDropdown(){
+            //DAY
             var daysInMonth;
-
+            var selectDate = $('#selectDateDropdown');
             switch (month) {
                 case "January":
                 case "March":
@@ -81,30 +57,54 @@
                 default:
                     daysInMonth = 0;
             }
-
-            // Populate the days dropdown
             for (var i = 1; i <= daysInMonth; i++) {
                 selectDate.append('<option value="' + i + '">' + i + '</option>');
             }
+        }
 
-            // // Perform an AJAX request to fetch data based on the selected date
-            // $.ajax({
-            //     url: '/loghistory', // Update the URL as per your Laravel route
-            //     method: 'GET',
-            //     data: {
-            //         year: year,
-            //         month: month,
-            //         day: $('#selectDateDropdown').val()
-            //     },
-            //     success: function(response) {
-            //         // Update the table with the fetched data
-            //         $('#borrowedTodayID').html(response);
-            //     },
-            //     error: function(xhr, status, error) {
-            //         console.error(error);
-            //     }
-            // });
+        $('#equipmentdateSelector').change(function(){
+
+            var EquipmentorDate = $('#equipmentdateSelector').val();
+
+            if(EquipmentorDate === 'Date'){
+                $('#dateDiv').show();
+                $('#dateTable').show();
+
+                $('#equipmentDiv').hide();
+                $('#equipmentTable').hide();
+            }
+            else if(EquipmentorDate === 'Equipment'){
+                $('#dateDiv').hide();
+                $('#dateTable').hide();
+
+                $('#equipmentDiv').show();
+                $('#equipmentTable').show();
+            }
             
+        });
+
+        //If nabago ung month, magbabago rin options, for example leap year
+        $('#selectMonthDropdown, #selectDateDropdown, #selectYearDropdown').change(function() {
+            var month = $('#selectMonthDropdown').val();
+            var year = $('#selectYearDropdown').val();
+            var selectDate = $('#selectDateDropdown').val();
+
+            $.ajax({
+                url: '{{ route('loghistory') }}',
+                method: 'GET',
+                data: {
+                    monthselect: month,
+                    dateselect: selectDate,
+                    yearselect: year
+                },
+                success: function(response) {
+                    $('#borrowedTodayID').html(response); // Update the table with search results
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+ 
         });
 
     
@@ -201,15 +201,15 @@
                         @foreach($borrowedToday as $borrowed)
                         <tr style="height: 30px">
                             <td>
-                                @if($borrowed->image)
-                                <img src="{{ asset($borrowed->image) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @if($borrowed->ITEM_IMAGE)
+                                <img src="{{ asset($borrowed->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @else
                                 <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @endif
                             </td>
                             <td>{{$borrowed->ITEM}}</td>
                             <td>{{$borrowed->BRAND}}</td>
-                            <td>{{$borrowed->color}}</td>
+                            <td>{{$borrowed->COLOR}}</td>
                             <td>{{$borrowed->QUANTITY}}</td>
                             <td>{{$borrowed->LOCATION}}</td>
                             <td>{{$borrowed->DATE_BORROWED}}</td>
@@ -241,17 +241,29 @@
                         <th style="border-top-right-radius: 5px;">SIGNATURE</th>
                     </thead>
                     <tbody class="table-group-divider">
+                        @foreach($returnedToday as $returned)
                         <tr style="height: 30px">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                @if($returned->ITEM_IMAGE)
+                                <img src="{{ asset($returned->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @else
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @endif
+                            </td>
+                            <td>{{$returned->ITEM}}</td>
+                            <td>{{$returned->BRAND}}</td>
+                            <td>{{$returned->COLOR}}</td>
+                            <td>{{$returned->QUANTITY}}</td>
+                            <td>{{$returned->LOCATION}}</td>
+                            <td>{{$returned->DATE_RETURNED}}</td>
+                            <td>{{$returned->RETURNEE}}</td>
+                            <td>
+                                @if($returned->RETURNEE_SIGNATURE)
+                                <img src="{{ asset($returned->RETURNEE_SIGNATURE) }}" alt="borrower signature" style="width: 60px; height: 30px;" loading="lazy">
+                                @endif
+                            </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

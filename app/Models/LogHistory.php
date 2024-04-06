@@ -14,6 +14,9 @@ class LogHistory extends Model
     protected $fillable = [
         'equipment_id',
         'ITEM',
+        'ITEM_CODE',
+        'ITEM_IMAGE',
+        'COLOR',
         'BRAND',
         'QUANTITY',
         'LOCATION',

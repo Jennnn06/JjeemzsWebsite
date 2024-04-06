@@ -383,6 +383,17 @@
                 
             </div>
 
+            <!--ITEM CODE-->
+            <div class="mb-3" style="display: flex; flex-direction: row; width: 1000px; ">
+
+                <!-- ITEM CODE -->
+                <div class="mb-3" style="position: relative">
+                    <label class="col-sm-2 form-label" style="color: #f0f0f0;">Code: </label>
+                    <input id="equipmentscodevalue" class="form-control" name="equipmentscode" type="text" placeholder="Enter code" style="width: 150px; margin-right: 50px">
+                </div>
+                
+            </div>
+
             <!-- Status -->
             <p style="color: white; font-size: 25px; margin-top: 50px">Status</p>
 

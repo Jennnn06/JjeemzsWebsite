@@ -8,38 +8,40 @@ use Illuminate\Http\Request;
 class LogHistoryController extends Controller
 {
     public function index(Request $request){
-        $year = $request->input('year');
-        $month = $request->input('month');
-        $day = $request->input('day');
+        $borrowedMonth = $request->input('monthselect');
+        $borrowedDay = $request->input('dateselect');
+        $borrowedYear = $request->input('yearselect');
 
-        // Fetch data from the log_history table based on the selected date
 
-        $borrowedToday = LogHistory::all();
+        $query = LogHistory::query();
 
-        foreach ($borrowedToday as $borrowed) {
-            $equipment = Equipments::find($borrowed->equipment_id);
-
-            if($equipment){
-                $borrowed->image = $equipment->ITEM_IMAGE;
-                $borrowed->color = $equipment->COLOR;
-            }
-            else {
-                // Handle case where equipment is not found
-                $borrowed->image = null; // or set a default image
-                $borrowed->color = null; // or set a default color
-            }
+        if ($borrowedMonth) {
+            $query->where('DATE_BORROWED', 'like', "%$borrowedMonth%");
         }
         
-        // where('DATE_BORROWED', $month . '-' . $day . '' . $year )->get();
-        // $returnedToday = LogHistory::where('DATE_RETURNED', $year . '-' . $month . '-' . $day)->get();
+        if ($borrowedDay) {
+            $query->where('DATE_BORROWED', 'like', "%$borrowedDay%");
+        }
+
+        if ($borrowedYear) {
+            $query->where('DATE_BORROWED', 'like', "%$borrowedYear%");
+        }
+
+        $returnedToday = LogHistory::whereNotNull('DATE_RETURNED')
+        ->orWhereNotNull('RETURNEE')
+        ->get();
+
+        $borrowedToday = $query->get();
         
-
-        // // Pass the fetched data to the view
-        // return response()->json([
-        //     'borrowedToday' => $borrowedToday,
-        //     // 'returnedToday' => $returnedToday,
-        // ]);
-
-        return view('loghistory', compact('borrowedToday'));
+    
+        if ($request->ajax()) {
+            // If it's an AJAX request, return a partial view for the table
+            return view('partials.loghistory_borrowedtable', compact('borrowedToday' ,'returnedToday'));
+        } else {
+            // If it's a regular request, return the full users view
+            return view('loghistory', compact('borrowedToday' ,'returnedToday'));
+        }
     }
+
+    
 }
