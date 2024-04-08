@@ -43,11 +43,6 @@ class LogHistoryController extends Controller
         $searchEquipments = $searchQuery->get();
         $borrowedToday = $borrowedQuery->get();
         $returnedToday = $returnedQuery->get();
-
-        // $returnedToday = $query->whereNotNull('DATE_RETURNED')
-        //               ->orWhereNotNull('RETURNEE')
-        //               ->get();
-        
     
         if ($request->ajax()) {
             // If it's an AJAX request, return JSON containing the HTML content for both tables
@@ -61,6 +56,7 @@ class LogHistoryController extends Controller
                 'searchEquipmentsHTML' => $searchEquipmentsHTML,
             ]);
         } else {
+
             // If it's a regular request, return the full users view
             return view('loghistory', compact('borrowedToday' ,'returnedToday', 'searchEquipments'));
         }

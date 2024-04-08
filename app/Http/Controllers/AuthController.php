@@ -44,7 +44,7 @@ class AuthController extends Controller
         $request->validate([
             //The name & password is the one that's declared on login.php
             'name' => ['required', 'regex:/^[a-zA-Z0-9_]+$/'],
-            'password' => ['required', 'regex:/^[a-zA-Z0-9]+$/']
+            'password' => ['required', 'regex:/^[a-zA-Z0-9.]+$/']
         ]);
 
         //Pass the upper thing here and go home which is declared on web.php

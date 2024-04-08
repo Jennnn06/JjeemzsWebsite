@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/users', [UserController::class, 'index'])->name('manageusers');
 
     //Edit users
-    Route::get('/users/{id}/editusers', [UserController::class, 'editfunction']);
+    Route::get('/users/{id}/editusers', [UserController::class, 'editfunction'])->name('editusers');
     Route::put('/users/{id}/editusers', [UserController::class, 'updatefunction']);
     Route::delete('/users/{user}/delete', [UserController::class, 'delete'])->name('user.delete');
 

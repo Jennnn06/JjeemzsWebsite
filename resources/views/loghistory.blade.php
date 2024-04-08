@@ -23,19 +23,26 @@
 
             $('#equipmentDiv').hide();
             $('#equipmentTable').hide();
-  
+            
+            populateDaysDropdown();
         }
 
         onStart();
 
         //FIX
-        function populateDaysDropdown(){
+        function populateDaysDropdown() {
             var month = $('#selectMonthDropdown').val();
             var year = $('#selectYearDropdown').val();
-            var selectDate = $('#selectDateDropdown').val();
-            //DAY
-            var daysInMonth;
             var selectDate = $('#selectDateDropdown');
+            
+            // Store the current selected day
+            var selectedDay = selectDate.val();
+            
+            // Clear existing options
+            selectDate.empty();
+            
+            // Calculate days in the selected month
+            var daysInMonth;
             switch (month) {
                 case "January":
                 case "March":
@@ -60,10 +67,16 @@
                 default:
                     daysInMonth = 0;
             }
+            
+            // Add options for each day in the month
             for (var i = 1; i <= daysInMonth; i++) {
                 selectDate.append('<option value="' + i + '">' + i + '</option>');
             }
+            
+            // Set the selected day back to its original value
+            selectDate.val(selectedDay);
         }
+
 
         $('#equipmentdateSelector').change(function(){
 
@@ -91,7 +104,7 @@
             var month = $('#selectMonthDropdown').val();
             var year = $('#selectYearDropdown').val();
             var selectDate = $('#selectDateDropdown').val();
-
+            
             populateDaysDropdown();
 
             $.ajax({
