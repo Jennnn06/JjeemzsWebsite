@@ -31,8 +31,9 @@ class LogHistoryController extends Controller
             $returnedQuery->where('DATE_RETURNED', 'like', "%$month%");
         }
         if ($day) {
-            $borrowedQuery->where('DATE_BORROWED', 'like', "%$day%");
-            $returnedQuery->where('DATE_RETURNED', 'like', "%$day%");
+            $dayWithComma = "$day,";
+            $borrowedQuery->where('DATE_BORROWED', 'like', "%$dayWithComma%");
+            $returnedQuery->where('DATE_RETURNED', 'like', "%$dayWithComma%");
         }
         if ($year) {
             $borrowedQuery->where('DATE_BORROWED', 'like', "%$year%");
