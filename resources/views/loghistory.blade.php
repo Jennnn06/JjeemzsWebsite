@@ -103,7 +103,8 @@
                     yearselect: year
                 },
                 success: function(response) {
-                    $('#borrowedTodayID').html(response); // Update the table with search results
+                    $('#borrowedTodayID').html(response.borrowedTodayHTML);
+                    $('#returnedTodayID').html(response.returnedTodayHTML);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
@@ -112,6 +113,23 @@
  
         });
 
+        $('#searchBarID').on('input', function() {
+            var searchTerm = $('#searchBarID').val();
+
+            $.ajax({
+                url: '{{ route('loghistory') }}', // Route to handle the search request on the server
+                method: 'GET',
+                data: { 
+                    search: searchTerm,
+                },
+                success: function(response) {
+                    $('#equipmentTable').html(response.searchEquipmentsHTML); // Update the users table with search results
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error); // Log any errors to the console
+                }
+            });
+        });
     
 });
 
@@ -179,7 +197,7 @@
 
             {{-- Search equipment if you choose equipment --}}
             <div id="equipmentDiv" style="align-items: flex-start; margin-top: 20px">
-                <input name="search" class="form-control" list="datalistOptions" id="searchEquipmentsBar" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; " placeholder="Search for name, code or serial number...">
+                <input name="search" class="form-control" list="datalistOptions" id="searchBarID" style="display: flex; flex: 1; flex-direction:row; margin-bottom: 20px; " placeholder="Search for name or code ">
             </div>
 
         </div>
@@ -212,7 +230,7 @@
                                 <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @endif
                             </td>
-                            <td>{{$borrowed->ITEM}}</td>
+                            <td>{{$borrowed->ITEM_CODE}} {{$borrowed->ITEM}}</td>
                             <td>{{$borrowed->BRAND}}</td>
                             <td>{{$borrowed->COLOR}}</td>
                             <td>{{$borrowed->QUANTITY}}</td>
@@ -231,7 +249,7 @@
             </div>
 
             <!-- Returned Today -->
-            <div class="returnedToday" style="width: 700px; font-size: 70%; ">
+            <div id="returnedTodayID" class="returnedToday" style="width: 700px; font-size: 70%; ">
                 <p style="font-size: 25px; color: #f0f0f0;">Returned Today</p>
                 <table class="table table-striped table-hover" >
                     <thead>
@@ -255,7 +273,7 @@
                                 <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                                 @endif
                             </td>
-                            <td>{{$returned->ITEM}}</td>
+                            <td>{{$returned->ITEM_CODE}} {{$returned->ITEM}}</td>
                             <td>{{$returned->BRAND}}</td>
                             <td>{{$returned->COLOR}}</td>
                             <td>{{$returned->QUANTITY}}</td>
@@ -292,21 +310,27 @@
                     <th style="border-top-right-radius: 5px;">SIGNATURE</th>
                 </thead>
                 <tbody class="table-group-divider">
-                    @for ($i = 0; $i < 10; $i++)
+                    @foreach($searchEquipments as $search)
                     <tr style="height: 30px">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                            @if($search->ITEM_IMAGE)
+                                <img src="{{ asset($search->ITEM_IMAGE) }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                                @else
+                                <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
+                            @endif
+                        </td>
+                        <td>{{$search->ITEM_CODE}} {{$search->ITEM}}</td>
+                        <td>{{$search->BRAND}}</td>
+                        <td>{{$search->COLOR}}</td>
+                        <td>{{$search->QUANTITY}}</td>
+                        <td>{{$search->LOCATION}}</td>
+                        <td>{{$search->DATE_BORROWED}}</td>
+                        <td>{{$search->BORROWER}}</td>
+                        <td>{{$search->DATE_RETURNED}}</td>
+                        <td>{{$search->RETURNEE}}</td>
+                        <td>{{$search->BORROWER_SIGNATURE}}</td>
                     </tr>
-                    @endfor
+                    @endforeach
                 </tbody>
             </table>
         </div>

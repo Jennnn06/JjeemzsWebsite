@@ -1,5 +1,5 @@
 <!-- Returned Today -->
-<div class="returnedToday" style="width: 700px; font-size: 70%; ">
+<div class="returnedToday" style="width: 700px;">
     <p style="font-size: 25px; color: #f0f0f0;">Returned Today</p>
     <table class="table table-striped table-hover" >
         <thead>
@@ -23,7 +23,7 @@
                     <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                     @endif
                 </td>
-                <td>{{$returned->ITEM}}</td>
+                <td>{{$returned->ITEM_CODE}} {{$returned->ITEM}}</td>
                 <td>{{$returned->BRAND}}</td>
                 <td>{{$returned->COLOR}}</td>
                 <td>{{$returned->QUANTITY}}</td>

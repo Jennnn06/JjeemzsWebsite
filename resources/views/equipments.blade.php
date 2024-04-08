@@ -12,6 +12,7 @@
 <!-- JavaScript AJAX Request for SEARCH BAR -->
 <script>
     $(document).ready(function() {
+
         $('#searchEquipmentsBar, #filbybrand, #filbycolor').on('input', function() {
             var searchTerm = $('#searchEquipmentsBar').val();
             var brandFilter = $('#filbybrand').val();
@@ -33,6 +34,7 @@
                 }
             });
         });
+        
     });
 </script> 
 

@@ -23,7 +23,7 @@
                     <img src="{{ asset('assets/placeholder.jpg') }}" alt="Equipment Image" style="width: 60px; height: 55px;" loading="lazy">
                     @endif
                 </td>
-                <td>{{$borrowed->ITEM}}</td>
+                <td>{{$borrowed->ITEM_CODE}} {{$borrowed->ITEM}}</td>
                 <td>{{$borrowed->BRAND}}</td>
                 <td>{{$borrowed->COLOR}}</td>
                 <td>{{$borrowed->QUANTITY}}</td>

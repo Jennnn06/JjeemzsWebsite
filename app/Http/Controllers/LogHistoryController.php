@@ -8,38 +8,60 @@ use Illuminate\Http\Request;
 class LogHistoryController extends Controller
 {
     public function index(Request $request){
-        $borrowedMonth = $request->input('monthselect');
-        $borrowedDay = $request->input('dateselect');
-        $borrowedYear = $request->input('yearselect');
+        $month = $request->input('monthselect');
+        $day = $request->input('dateselect');
+        $year = $request->input('yearselect');
 
+        $searchTerm = $request->input('search');
 
         $query = LogHistory::query();
+        $searchQuery = LogHistory::query();
+        $borrowedQuery = LogHistory::query();
+        $returnedQuery = LogHistory::query();
 
-        if ($borrowedMonth) {
-            $query->where('DATE_BORROWED', 'like', "%$borrowedMonth%");
-        }
-        
-        if ($borrowedDay) {
-            $query->where('DATE_BORROWED', 'like', "%$borrowedDay%");
-        }
-
-        if ($borrowedYear) {
-            $query->where('DATE_BORROWED', 'like', "%$borrowedYear%");
+        //Search
+        if ($searchTerm) {
+            $searchQuery->where('ITEM', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('ITEM_CODE', 'like', '%' . $searchTerm . '%');
         }
 
-        $returnedToday = LogHistory::whereNotNull('DATE_RETURNED')
-        ->orWhereNotNull('RETURNEE')
-        ->get();
+        //If date changed
+        if ($month) {
+            $borrowedQuery->where('DATE_BORROWED', 'like', "%$month%");
+            $returnedQuery->where('DATE_RETURNED', 'like', "%$month%");
+        }
+        if ($day) {
+            $borrowedQuery->where('DATE_BORROWED', 'like', "%$day%");
+            $returnedQuery->where('DATE_RETURNED', 'like', "%$day%");
+        }
+        if ($year) {
+            $borrowedQuery->where('DATE_BORROWED', 'like', "%$year%");
+            $returnedQuery->where('DATE_RETURNED', 'like', "%$year%");
+        }
 
-        $borrowedToday = $query->get();
+        $searchEquipments = $searchQuery->get();
+        $borrowedToday = $borrowedQuery->get();
+        $returnedToday = $returnedQuery->get();
+
+        // $returnedToday = $query->whereNotNull('DATE_RETURNED')
+        //               ->orWhereNotNull('RETURNEE')
+        //               ->get();
         
     
         if ($request->ajax()) {
-            // If it's an AJAX request, return a partial view for the table
-            return view('partials.loghistory_borrowedtable', compact('borrowedToday' ,'returnedToday'));
+            // If it's an AJAX request, return JSON containing the HTML content for both tables
+            $borrowedTodayHTML = view('partials.loghistory_borrowedtable', compact('borrowedToday', 'returnedToday', 'searchEquipments'))->render();
+            $returnedTodayHTML = view('partials.loghistory_returnedtable', compact('borrowedToday', 'returnedToday', 'searchEquipments'))->render();
+            $searchEquipmentsHTML = view('partials.loghistory_searchtable', compact('borrowedToday', 'returnedToday', 'searchEquipments'))->render();
+
+            return response()->json([
+                'borrowedTodayHTML' => $borrowedTodayHTML,
+                'returnedTodayHTML' => $returnedTodayHTML,
+                'searchEquipmentsHTML' => $searchEquipmentsHTML,
+            ]);
         } else {
             // If it's a regular request, return the full users view
-            return view('loghistory', compact('borrowedToday' ,'returnedToday'));
+            return view('loghistory', compact('borrowedToday' ,'returnedToday', 'searchEquipments'));
         }
     }
 
