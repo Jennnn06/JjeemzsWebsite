@@ -25,6 +25,31 @@
             $('#equipmentTable').hide();
             
             populateDaysDropdown();
+            updateTableData();
+        }
+
+        function updateTableData() {
+            var month = $('#selectMonthDropdown').val();
+            var year = $('#selectYearDropdown').val();
+            var selectDate = $('#selectDateDropdown').val();
+
+            $.ajax({
+                url: '{{ route('loghistory') }}',
+                method: 'GET',
+                data: {
+                    monthselect: month,
+                    dateselect: selectDate,
+                    yearselect: year
+                },
+                success: function(response) {
+                    $('#borrowedTodayID').html(response.borrowedTodayHTML);
+                    $('#returnedTodayID').html(response.returnedTodayHTML);
+                    $('#equipmentTable').html(response.searchEquipmentsHTML);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
         }
 
         onStart();
@@ -220,7 +245,7 @@
 
             <!-- Borrowed Today -->
             <div id="borrowedTodayID" class="borrowedToday" style="width: 700px; font-size: 70%; margin-right: 50px">
-                <p style="font-size: 25px; color: #f0f0f0;">Borrowed Today</p>
+                <p style="font-size: 25px; color: #f0f0f0;">Borrowed Item</p>
                 <table class="table table-striped table-hover">
                     <thead>
                         <th style="border-top-left-radius: 5px;">IMAGE</th>
@@ -263,7 +288,7 @@
 
             <!-- Returned Today -->
             <div id="returnedTodayID" class="returnedToday" style="width: 700px; font-size: 70%; ">
-                <p style="font-size: 25px; color: #f0f0f0;">Returned Today</p>
+                <p style="font-size: 25px; color: #f0f0f0;">Returned Item</p>
                 <table class="table table-striped table-hover" >
                     <thead>
                         <th style="border-top-left-radius: 5px;">IMAGE</th>

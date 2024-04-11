@@ -1,6 +1,6 @@
 <!-- Borrowed Today -->
 <div id="borrowedTodayID" class="borrowedToday" style="width: 700px; margin-right: 50px">
-    <p style="font-size: 25px; color: #f0f0f0;">Borrowed Today</p>
+    <p style="font-size: 25px; color: #f0f0f0;">Borrowed Item</p>
     <table class="table table-striped table-hover">
         <thead>
             <th style="border-top-left-radius: 5px;">IMAGE</th>

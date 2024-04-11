@@ -1,6 +1,6 @@
 <!-- Returned Today -->
 <div class="returnedToday" style="width: 700px;">
-    <p style="font-size: 25px; color: #f0f0f0;">Returned Today</p>
+    <p style="font-size: 25px; color: #f0f0f0;">Returned Item</p>
     <table class="table table-striped table-hover" >
         <thead>
             <th style="border-top-left-radius: 5px;">IMAGE</th>
